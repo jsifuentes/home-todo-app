@@ -12,7 +12,4 @@ if [[ -n $(git branch --show-current) ]]; then
 	exit 1
 fi
 
-ssh user@server.lab.sifuen.com "cd ~/Documents/homelab/todo/ && git pull"
-
-docker compose stop todo
-docker compose up --build -d todo
+ssh user@server.lab.sifuen.com "cd ~/Documents/homelab/todo/ && git pull && docker compose stop todo && docker compose up --build -d todo"
