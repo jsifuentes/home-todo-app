@@ -84,7 +84,7 @@ $taskLists = getTasks($categoryId);
 
 		<?php foreach ($taskLists as $status => $taskList): ?>
 			<ul id="todo-list-<?= $status ?>"
-				class="list-group bg-gray-100 rounded <?php if ($tvMode): ?>columns-2<?php endif; ?> grid grid-cols-2 gap-x-2"
+				class="list-group bg-gray-100 rounded <?php if ($tvMode): ?>grid grid-cols-2 gap-x-2<?php endif; ?>"
 				x-data="{ editing: false }">
 				<?php foreach ($taskList as $task): ?>
 					<li class="list-group-item bg-white p-2 mb-2 rounded shadow flex items-center justify-between"
