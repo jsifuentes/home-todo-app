@@ -42,7 +42,11 @@ $db = new SQLite3(DB_PATH);
 // Check for migration updates
 $migrations = glob(__DIR__ . '/migrations/*.php');
 // get list of all migrations previously run
-$previousMigrations = $db->query("SELECT file FROM migrations")->fetchArray(SQLITE3_ASSOC) ?: [];
+$getMigrationFileNames = $db->query("SELECT file FROM migrations");
+$previousMigrations = [];
+while ($row = $getMigrationFileNames->fetchArray(SQLITE3_ASSOC)) {
+	$previousMigrations[] = $row['file'];
+}
 
 foreach ($migrations as $migration) {
 	// check if already run

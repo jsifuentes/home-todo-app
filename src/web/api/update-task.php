@@ -16,6 +16,7 @@ $taskId = $_POST['taskId'] ?? null;
 $title = $_POST['title'] ?? null;
 $body = $_POST['body'] ?? null;
 $sortOrder = $_POST['sort_order'] ?? null;
+$categoryId = $_POST['category_id'] ?? null;
 
 // Validate input
 if (!$taskId || !is_numeric($taskId)) {
@@ -38,6 +39,23 @@ if ($title !== null && empty($title)) {
 	exit;
 }
 
+// Check if categoryId is set and is numeric and is an existing category in the database
+$shouldUpdateCategory = $categoryId !== null;
+if ($shouldUpdateCategory) {
+	if (is_numeric($categoryId)) {
+		$stmt = $db->prepare("SELECT id FROM categories WHERE id = :categoryId");
+		$stmt->bindValue(':categoryId', $categoryId);
+		$result = $stmt->execute();
+		if (!$result) {
+			http_response_code(400);
+			echo renderError('Invalid category ID');
+			exit;
+		}
+	} else {
+		$categoryId = null;
+	}
+}
+
 // Prepare and execute the update query
 $query = "UPDATE tasks SET updated_at = CURRENT_TIMESTAMP";
 $params = [];
@@ -55,6 +73,11 @@ if ($body !== null) {
 if ($sortOrder !== null) {
 	$query .= ", sort_order = :sort_order";
 	$params[':sort_order'] = $sortOrder;
+}
+
+if ($shouldUpdateCategory) {
+	$query .= ", category_id = :category_id";
+	$params[':category_id'] = $categoryId;
 }
 
 $query .= " WHERE id = :id";

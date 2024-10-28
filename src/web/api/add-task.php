@@ -13,8 +13,9 @@ $description = $_POST['description'] ?? '';
 $sortOrder = $_POST['sort_order'] ?? 1;
 // $priority = $_POST['priority'] ?? 3;
 $dueDate = $_POST['due_date'] ?? null;
+$categoryId = $_POST['category_id'] ?? null;
 
-if (empty($title) || empty($sortOrder) || !is_numeric($sortOrder) || empty($dueDate)) {
+if (empty($title) || empty($sortOrder) || !is_numeric($sortOrder) || empty($dueDate) || !is_numeric($categoryId)) {
 	http_response_code(400);
 	echo renderError("All fields are required.");
 	exit;
@@ -26,33 +27,14 @@ if (!isset(DUE_DATE_LABELS[$dueDate])) {
 	exit;
 }
 
-// Calculate the due dates
-$endDueDate = new DateTime();
+$endDueDate = calculateEndDate($dueDate);
 
-$lastChar = substr($dueDate, -1);
-$amount = intval(substr($dueDate, 0, -1));
-
-switch ($lastChar) {
-	case 'd':
-		$endDueDate->modify("+$amount days");
-		break;
-	case 'm':
-		$endDueDate->modify("+$amount months");
-		break;
-	case 'y':
-		$endDueDate->modify("+$amount years");
-		break;
-	default:
-		http_response_code(400);
-		echo renderError("Invalid due date format.");
-		exit;
-}
-
-$stmt = $db->prepare("INSERT INTO tasks (title, body, sort_order, due_date) VALUES (?, ?, ?, ?)");
+$stmt = $db->prepare("INSERT INTO tasks (title, body, sort_order, due_date, category_id) VALUES (?, ?, ?, ?, ?)");
 $stmt->bindValue(1, $title);
 $stmt->bindValue(2, $description);
 $stmt->bindValue(3, $sortOrder);
 $stmt->bindValue(4, $endDueDate->format('Y-m-d H:i:s'));
+$stmt->bindValue(5, $categoryId);
 $stmt->execute();
 
 header('HX-Trigger: refreshTasks');

@@ -1,5 +1,7 @@
 document.addEventListener('alpine:init', () => {
 	Alpine.data('tasksList', () => ({
+		formVisible: false,
+
 		init: () => {
 			new Sortable(document.getElementById('todo-list-notDone'), {
 				animation: 150,
