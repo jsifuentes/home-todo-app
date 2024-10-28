@@ -23,5 +23,5 @@ if (!$result) {
 	throw new Exception("Failed to delete task: " . $db->lastErrorMsg());
 }
 
-header('HX-Trigger: refreshTasks');
+header('HX-Trigger: tasksUpdated');
 echo renderSuccess("Task deleted successfully.");

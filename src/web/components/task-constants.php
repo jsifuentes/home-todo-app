@@ -1,5 +1,8 @@
 <?php
 
+const TASK_STATUS_TODO = 'todo';
+const TASK_STATUS_DONE = 'done';
+
 const PRIORITY_LOW = 2;
 const PRIORITY_NORMAL = 1;
 const PRIORITY_HIGH = 0;
@@ -20,3 +23,5 @@ const DUE_DATE_LABELS = [
 	'6m' => '6 months',
 	'1y' => '1 year',
 ];
+
+DEFINE('DUE_DATE_RANGE_CHOICES', array_keys(DUE_DATE_LABELS));

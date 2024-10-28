@@ -28,5 +28,5 @@ foreach ($taskIds as $index => $taskId) {
 }
 
 
-header('HX-Trigger: refreshTasks');
+header('HX-Trigger: tasksUpdated');
 echo renderSuccess('Sort order updated successfully');

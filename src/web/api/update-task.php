@@ -95,5 +95,5 @@ if (!$result) {
 	throw new Exception("Failed to update task: " . $db->lastErrorMsg());
 }
 
-header('HX-Trigger: refreshTasks');
+header('HX-Trigger: tasksUpdated');
 echo renderSuccess('Task updated successfully');

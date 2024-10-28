@@ -10,12 +10,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $title = $_POST['title'] ?? '';
 $description = $_POST['description'] ?? '';
-$sortOrder = $_POST['sort_order'] ?? 1;
+$sortOrder = $_POST['sort_order'] ?? 0;
 // $priority = $_POST['priority'] ?? 3;
 $dueDate = $_POST['due_date'] ?? null;
 $categoryId = $_POST['category_id'] ?? null;
 
-if (empty($title) || empty($sortOrder) || !is_numeric($sortOrder) || empty($dueDate) || !is_numeric($categoryId)) {
+if (empty($title) || !is_numeric($sortOrder) || empty($dueDate) || !is_numeric($categoryId)) {
 	http_response_code(400);
 	echo renderError("All fields are required.");
 	exit;
@@ -37,6 +37,6 @@ $stmt->bindValue(4, $endDueDate->format('Y-m-d H:i:s'));
 $stmt->bindValue(5, $categoryId);
 $stmt->execute();
 
-header('HX-Trigger: refreshTasks');
+header('HX-Trigger: taskCreated');
 
 echo renderSuccess("Task added successfully!");
