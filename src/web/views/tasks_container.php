@@ -15,87 +15,88 @@ $defaultCategoryId = $defaultCategoryIndex !== false ? $categories[$defaultCateg
 	},
 	null
 )'>
-	<div class="text-center">
-		<button @click="formVisible = !formVisible" class="bg-blue-500 hover:bg-blue-700 text-white font-bold mt-2 py-2 px-4 rounded lg:w-[200px]">
-			Add Task
-		</button>
-	</div>
-
-	<div class="mx-auto">
-		<div x-show="formVisible" x-cloak class="bg-white p-4 rounded-lg shadow-md max-w-md mx-auto my-4">
-			<form hx-post="/api/add-task.php" hx-swap="innerHTML" hx-target="#add-task-form-result">
-				<div id="add-task-form-result" x-ref="addTaskFormResult"></div>
-
-				<div class="mb-2">
-					<input type="text" name="title"
-						:placeholder="randomTaskTitle() + '...'"
-						class="w-full p-2 border rounded"
-						required
-						x-ref="taskTitle">
-				</div>
-				<div class="text-sm font-medium text-gray-700 mb-2">Category</div>
-				<div class="flex flex-wrap gap-2 mb-3">
-					<?php foreach ($categories as $category): ?>
-						<div class="relative">
-							<input type="radio"
-								name="category_id"
-								value="<?= $category['id'] ?>"
-								id="category_<?= $category['id'] ?>"
-								x-model="newTaskCategory"
-								class="absolute opacity-0 w-full h-full cursor-pointer" required>
-							<label for="category_<?= $category['id'] ?>"
-								class="px-3 py-1 rounded border transition-colors duration-200"
-								:class="{ 'bg-blue-500 text-white border-blue-600 hover:bg-blue-600': newTaskCategory == <?= $category['id'] ?>, 'border-gray-300 hover:bg-gray-50': newTaskCategory != <?= $category['id'] ?>}">
-								<?= htmlspecialchars($category['name']) ?>
-							</label>
-						</div>
-					<?php endforeach; ?>
-				</div>
-				<div class="mb-2">
-					<div class="space-y-2">
-						<div class="text-sm font-medium text-gray-700 mb-2">Priority</div>
-						<div class="flex text-xs justify-center gap-1 w-full">
-							<div class="flex items-center p-1 border rounded transition-all flex-grow" :class="{ 'border-blue-500 bg-blue-50': newTaskPriority === '<?= PRIORITY_LOW ?>' }">
-								<input type="radio" id="low" name="priority" value="<?= PRIORITY_LOW ?>" class="mr-2" x-model="newTaskPriority">
-								<label for="low" class="flex-grow cursor-pointer">
-									<div class="font-semibold">Lower Priority</div>
-								</label>
-							</div>
-							<div class="flex items-center p-1 border rounded transition-all flex-grow" :class="{ 'border-blue-500 bg-blue-50': newTaskPriority === '<?= PRIORITY_NORMAL ?>' }">
-								<input type="radio" id="normal" name="priority" value="<?= PRIORITY_NORMAL ?>" class="mr-2" x-model="newTaskPriority">
-								<label for="normal" class="flex-grow cursor-pointer">
-									<div class="font-semibold">Normal Priority</div>
-								</label>
-							</div>
-							<div class="flex items-center p-1 border rounded transition-all flex-grow" :class="{ 'border-blue-500 bg-blue-50': newTaskPriority === '<?= PRIORITY_HIGH ?>' }">
-								<input type="radio" id="high" name="priority" value="<?= PRIORITY_HIGH ?>" class="mr-2" x-model="newTaskPriority">
-								<label for="high" class="flex-grow cursor-pointer">
-									<div class="font-semibold">Need to do soon</div>
-								</label>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="mb-4">
-					<label for="due_date_selector" class="block text-sm font-medium text-gray-700 mb-2">Due Date</label>
-					<div>
-						<input type="range" id="due_date_selector"
-							x-model="newTaskDueDateRangeChoice"
-							min="0"
-							:max="Object.values(dueDatesConfig).length - 1"
-							step="1"
-							class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
-						<div class="text-center" x-text="Object.values(dueDatesConfig)[newTaskDueDateRangeChoice]"></div>
-						<input type="hidden" :value="Object.keys(dueDatesConfig)[newTaskDueDateRangeChoice]" name="due_date">
-					</div>
-				</div>
-				<button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full">
-					Add
-				</button>
-			</form>
+	<?php if (!$tvMode): ?>
+		<div class="text-center">
+			<button @click="formVisible = !formVisible" class="bg-blue-500 hover:bg-blue-700 text-white font-bold mt-2 py-2 px-4 rounded lg:w-[200px]">
+				Add Task
+			</button>
 		</div>
-	</div>
 
+		<div class="mx-auto">
+			<div x-show="formVisible" x-cloak class="bg-white p-4 rounded-lg shadow-md max-w-md mx-auto my-4">
+				<form hx-post="/api/add-task.php" hx-swap="innerHTML" hx-target="#add-task-form-result">
+					<div id="add-task-form-result" x-ref="addTaskFormResult"></div>
+
+					<div class="mb-2">
+						<input type="text" name="title"
+							:placeholder="randomTaskTitle() + '...'"
+							class="w-full p-2 border rounded"
+							required
+							x-ref="taskTitle">
+					</div>
+					<div class="text-sm font-medium text-gray-700 mb-2">Category</div>
+					<div class="flex flex-wrap gap-2 mb-3">
+						<?php foreach ($categories as $category): ?>
+							<div class="relative">
+								<input type="radio"
+									name="category_id"
+									value="<?= $category['id'] ?>"
+									id="category_<?= $category['id'] ?>"
+									x-model="newTaskCategory"
+									class="absolute opacity-0 w-full h-full cursor-pointer" required>
+								<label for="category_<?= $category['id'] ?>"
+									class="px-3 py-1 rounded border transition-colors duration-200"
+									:class="{ 'bg-blue-500 text-white border-blue-600 hover:bg-blue-600': newTaskCategory == <?= $category['id'] ?>, 'border-gray-300 hover:bg-gray-50': newTaskCategory != <?= $category['id'] ?>}">
+									<?= htmlspecialchars($category['name']) ?>
+								</label>
+							</div>
+						<?php endforeach; ?>
+					</div>
+					<div class="mb-2">
+						<div class="space-y-2">
+							<div class="text-sm font-medium text-gray-700 mb-2">Priority</div>
+							<div class="flex text-xs justify-center gap-1 w-full">
+								<div class="flex items-center p-1 border rounded transition-all flex-grow" :class="{ 'border-blue-500 bg-blue-50': newTaskPriority === '<?= PRIORITY_LOW ?>' }">
+									<input type="radio" id="low" name="priority" value="<?= PRIORITY_LOW ?>" class="mr-2" x-model="newTaskPriority">
+									<label for="low" class="flex-grow cursor-pointer">
+										<div class="font-semibold">Lower Priority</div>
+									</label>
+								</div>
+								<div class="flex items-center p-1 border rounded transition-all flex-grow" :class="{ 'border-blue-500 bg-blue-50': newTaskPriority === '<?= PRIORITY_NORMAL ?>' }">
+									<input type="radio" id="normal" name="priority" value="<?= PRIORITY_NORMAL ?>" class="mr-2" x-model="newTaskPriority">
+									<label for="normal" class="flex-grow cursor-pointer">
+										<div class="font-semibold">Normal Priority</div>
+									</label>
+								</div>
+								<div class="flex items-center p-1 border rounded transition-all flex-grow" :class="{ 'border-blue-500 bg-blue-50': newTaskPriority === '<?= PRIORITY_HIGH ?>' }">
+									<input type="radio" id="high" name="priority" value="<?= PRIORITY_HIGH ?>" class="mr-2" x-model="newTaskPriority">
+									<label for="high" class="flex-grow cursor-pointer">
+										<div class="font-semibold">Need to do soon</div>
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="mb-4">
+						<label for="due_date_selector" class="block text-sm font-medium text-gray-700 mb-2">Due Date</label>
+						<div>
+							<input type="range" id="due_date_selector"
+								x-model="newTaskDueDateRangeChoice"
+								min="0"
+								:max="Object.values(dueDatesConfig).length - 1"
+								step="1"
+								class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+							<div class="text-center" x-text="Object.values(dueDatesConfig)[newTaskDueDateRangeChoice]"></div>
+							<input type="hidden" :value="Object.keys(dueDatesConfig)[newTaskDueDateRangeChoice]" name="due_date">
+						</div>
+					</div>
+					<button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full">
+						Add
+					</button>
+				</form>
+			</div>
+		</div>
+	<?php endif; ?>
 
 	<div class="flex flex-wrap gap-2 my-3">
 		<button type="button"
@@ -121,7 +122,7 @@ $defaultCategoryId = $defaultCategoryIndex !== false ? $categories[$defaultCateg
 		<?php endforeach; ?>
 	</div>
 
-	<div id="tasks-list" hx-get="/views/tasks_list.php" :hx-vars="filteredCategory ? 'category_id:' + filteredCategory : ''" hx-trigger="load, refreshTasks from:body, every 5s"
+	<div id="tasks-list" hx-get="/views/tasks_list.php" :hx-vars="filteredCategory ? 'category_id:' + filteredCategory : ''" hx-trigger="load, refreshTasks from:body"
 		x-init="$watch('filteredCategory', (newVal) => {
 			htmx.trigger('body', 'refreshTasks');
 		})">

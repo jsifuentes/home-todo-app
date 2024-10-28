@@ -14,3 +14,5 @@ require_once __DIR__ . '/web/components/task-constants.php';
 require_once __DIR__ . '/web/components/error.php';
 require_once __DIR__ . '/web/components/success.php';
 $db = new SQLite3(DB_PATH);
+
+$tvMode = isset($_GET['tv']);
