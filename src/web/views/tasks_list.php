@@ -107,8 +107,8 @@ $taskLists = getTasks($categoryId);
 												<?php if ($task['due_date'] && $task['status'] !== TASK_STATUS_DONE): ?>
 													<p class="rounded bg-gray-200 px-1 mr-1"
 														:class="{
-													'bg-red-500 text-white': dueWithinHours(<?= strtotime($task['due_date']) ?>, 24),
-													'bg-yellow-500 text-white': dueWithinHours(<?= strtotime($task['due_date']) ?>, 48)
+													'bg-yellow-500 text-white': dueWithinHours(<?= strtotime($task['due_date']) ?>, 48),
+													'bg-red-500 text-white': dueWithinHours(<?= strtotime($task['due_date']) ?>, 24)
 												}">
 														due <?= time2str($task['due_date']) ?><template x-if="dueWithinHours(<?= strtotime($task['due_date']) ?>, 48)">
 															<span>!</span>
@@ -181,7 +181,7 @@ $taskLists = getTasks($categoryId);
 										<span>Delete</span>
 									</button>
 
-									<button x-show="editingTaskId === <?= $task['id'] ?>" type="button" class="px-3 py-1 w-full text-sm text-gray-400 text-center" hx-delete="/api/delete_task.php?task_id=<?= $task['id'] ?>" hx-confirm="Are you sure you want to delete this task?">
+									<button x-show="editingTaskId === <?= $task['id'] ?>" type="submit" class="px-3 py-1 w-full text-sm text-gray-400 text-center">
 										<div>
 											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 m-auto">
 												<path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
