@@ -9,8 +9,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 	exit;
 }
 
-$taskId = $_POST['taskId'] ?? '';
-$newStatus = $_POST['newStatus'] ?? '';
+$taskId = $_POST['task_id'] ?? '';
+$newStatus = $_POST['new_status'] ?? '';
 
 if (empty($taskId) || empty($newStatus)) {
 	http_response_code(400);

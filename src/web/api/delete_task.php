@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
 	exit;
 }
 
-$taskId = $_REQUEST['taskId'] ?? '';
+$taskId = $_REQUEST['task_id'] ?? '';
 
 if (empty($taskId) || !is_numeric($taskId)) {
 	http_response_code(400);

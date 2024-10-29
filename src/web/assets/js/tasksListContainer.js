@@ -3,12 +3,12 @@ document.addEventListener('alpine:init', () => {
 		formVisible: false,
 		filteredCategory: initialFilteredCategory,
 		refreshTasksTimeout: null,
+		autoRefreshEnabled: true,
 
 		// For the add task form
 		priorityLevelsConfig: priorityLevelsConfig,
 		dueDatesConfig: dueDatesConfig,
 		dueDateRangeChoices: Object.keys(dueDatesConfig),
-		
 		newTaskPriority: priorityLevelsConfig.normal,
 		newTaskCategory: initialFilteredCategory,
 		newTaskDueDateRangeChoice: null,

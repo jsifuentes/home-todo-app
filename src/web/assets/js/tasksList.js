@@ -1,8 +1,10 @@
 document.addEventListener('alpine:init', () => {
 	Alpine.data('tasksList', () => ({
 		refreshTasksTimeout: null,
+		editingTaskId: null,
+		showDropdownTaskId: null,
 
-		init: () => {
+		init() {
 			new Sortable(document.getElementById('todo-list-notDone'), {
 				animation: 150,
 				ghostClass: 'bg-gray-100',
@@ -14,7 +16,7 @@ document.addEventListener('alpine:init', () => {
 					const formData = new FormData();
 					formData.append('task_ids_in_order', JSON.stringify(items.filter(x => !x.classList.contains('done')).map(x => x.getAttribute('data-id'))));
 			
-					fetch('/api/update-sort-order.php', {
+					fetch('/api/update_sort_order.php', {
 							method: 'POST',
 							headers: {
 								'Content-Type': 'application/x-www-form-urlencoded',
@@ -29,16 +31,28 @@ document.addEventListener('alpine:init', () => {
 						});
 				}
 			});
+
+			this.$watch('editingTaskId', new_value => {
+				if (new_value) {
+					htmx.process(htmx.find('.edit-task-form'))
+				}
+			});
+
+			setInterval(() => {
+				if (this.autoRefreshEnabled && !this.editingTaskId && !this.showDropdownTaskId) {
+					this.$dispatch('refreshTasks');
+				}
+			}, 5000);
 		},
 
 		updateStatus: (event, taskId) => {
 			const newStatus = event.target.checked ? 'done' : 'todo';
-			fetch('/api/update-status.php', {
+			fetch('/api/update_status.php', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/x-www-form-urlencoded',
 					},
-					body: `taskId=${taskId}&newStatus=${newStatus}`
+					body: `task_id=${taskId}&new_status=${newStatus}`
 				})
 				.then(data => {
 					console.log('Status updated successfully');

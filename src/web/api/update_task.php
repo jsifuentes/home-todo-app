@@ -12,11 +12,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // Get the task data from the POST request
-$taskId = $_POST['taskId'] ?? null;
+$taskId = $_POST['task_id'] ?? null;
 $title = $_POST['title'] ?? null;
 $body = $_POST['body'] ?? null;
+$status = $_POST['status'] ?? null;
 $sortOrder = $_POST['sort_order'] ?? null;
 $categoryId = $_POST['category_id'] ?? null;
+$addTimeToDueDate = $_POST['add_to_due_date'] ?? null;
 
 // Validate input
 if (!$taskId || !is_numeric($taskId)) {
@@ -36,6 +38,17 @@ if ($sortOrder !== null && !is_numeric($sortOrder)) {
 if ($title !== null && empty($title)) {
 	http_response_code(400);
 	echo renderError('Title cannot be empty');
+	exit;
+}
+
+// Check if the task exists
+$stmt = $db->prepare("SELECT * FROM tasks WHERE id = :taskId");
+$stmt->bindValue(':taskId', $taskId);
+$result = $stmt->execute();
+$taskRow = $result->fetchArray(SQLITE3_ASSOC);
+if (!$taskRow) {
+	http_response_code(400);
+	echo renderError('Task not found');
 	exit;
 }
 
@@ -78,6 +91,11 @@ if ($sortOrder !== null) {
 if ($shouldUpdateCategory) {
 	$query .= ", category_id = :category_id";
 	$params[':category_id'] = $categoryId;
+}
+
+if ($addTimeToDueDate !== null) {
+	$query .= ", due_date = :due_date";
+	$params[':due_date'] = calculateEndDate($addTimeToDueDate, new DateTime($taskRow['due_date']))->format('Y-m-d H:i:s');
 }
 
 $query .= " WHERE id = :id";

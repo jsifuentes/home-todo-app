@@ -24,7 +24,7 @@ $defaultCategoryId = $defaultCategoryIndex !== false ? $categories[$defaultCateg
 
 		<div class="mx-auto">
 			<div x-show="formVisible" x-cloak class="bg-white p-4 rounded-lg shadow-md max-w-md mx-auto my-4">
-				<form hx-post="/api/add-task.php" hx-swap="innerHTML" hx-target="#add-task-form-result">
+				<form hx-post="/api/add_task.php" hx-swap="innerHTML" hx-target="#add-task-form-result">
 					<div id="add-task-form-result" x-ref="addTaskFormResult"></div>
 
 					<div class="mb-2">
@@ -107,9 +107,7 @@ $defaultCategoryId = $defaultCategoryIndex !== false ? $categories[$defaultCateg
 			@click="filteredCategory = null">
 			All
 		</button>
-		<?php
-		foreach ($categories as $category):
-		?>
+		<?php foreach ($categories as $category): ?>
 			<button type="button"
 				class="px-3 py-1 rounded border transition-colors duration-200"
 				:class="{
@@ -122,9 +120,20 @@ $defaultCategoryId = $defaultCategoryIndex !== false ? $categories[$defaultCateg
 		<?php endforeach; ?>
 	</div>
 
-	<div id="tasks-list" hx-get="/views/tasks_list.php" :hx-vars="filteredCategory ? 'category_id:' + filteredCategory : ''" hx-trigger="load, refreshTasks from:body, every 5s"
+	<div id="tasks-list" hx-get="/views/tasks_list.php" :hx-vars="filteredCategory ? 'category_id:' + filteredCategory : ''" hx-trigger="load, refreshTasks from:body"
 		x-init="$watch('filteredCategory', (newVal) => {
 			htmx.trigger('body', 'refreshTasks');
 		})">
 	</div>
+
+	<?php if (!$tvMode): ?>
+		<div class="text-center">
+			<button type="button"
+				@click="autoRefreshEnabled = !autoRefreshEnabled"
+				class="text-xs mt-4 px-4 py-2 rounded transition-colors duration-200"
+				:class="autoRefreshEnabled ? 'bg-gray-100 hover:bg-gray-200 text-gray-600' : 'bg-blue-400 hover:bg-blue-400 text-white'">
+				<span x-text="autoRefreshEnabled ? 'Disable' : 'Enable'"></span> Auto-Refresh
+			</button>
+		</div>
+	<?php endif; ?>
 </div>

@@ -41,23 +41,23 @@ function getPastTimeString($diff, $dayDiff, $timestamp)
 function getFutureTimeString($diff, $dayDiff, $timestamp)
 {
 	if ($dayDiff == 0) {
-		if ($diff < 120) return 'in a minute';
-		if ($diff < 3600) return 'in ' . floor($diff / 60) . ' minutes';
-		if ($diff < 7200) return 'in an hour';
-		if ($diff < 86400) return 'in ' . floor($diff / 3600) . ' hours';
+		// if ($diff < 120) return 'in a minute';
+		// if ($diff < 3600) return 'in ' . floor($diff / 60) . ' minutes';
+		// if ($diff < 7200) return 'in an hour';
+		// if ($diff < 86400) return 'in ' . floor($diff / 3600) . ' hours';
+		return 'end of day today';
 	}
 	if ($dayDiff == 1) return 'Tomorrow';
 	if ($dayDiff < 4) return date('l', $timestamp);
-	if ($dayDiff < 7 + (7 - date('w'))) return 'next week';
+	if ($dayDiff < 7 + (7 - date('w'))) return 'next ' . date('l', $timestamp);
 	if (ceil($dayDiff / 7) < 4) return 'in ' . ceil($dayDiff / 7) . ' weeks';
 	if (date('n', $timestamp) == date('n') + 1) return 'next month';
 	return date('F Y', $timestamp);
 }
 
-function calculateEndDate(string $incrementer): DateTime
+function calculateEndDate(string $incrementer, DateTime $start = new DateTime()): DateTime
 {
-	// Calculate the due dates
-	$endDueDate = new DateTime();
+	$endDueDate = clone $start;
 
 	$lastChar = substr($incrementer, -1);
 	$amount = intval(substr($incrementer, 0, -1));
@@ -73,9 +73,7 @@ function calculateEndDate(string $incrementer): DateTime
 			$endDueDate->modify("+$amount years");
 			break;
 		default:
-			http_response_code(400);
-			echo renderError("Invalid due date format.");
-			exit;
+			throw new InvalidArgumentException("Invalid due date format.");
 	}
 
 	return $endDueDate;

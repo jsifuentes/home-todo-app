@@ -10,7 +10,7 @@ if (!file_exists(dirname(DB_PATH))) {
 require_once __DIR__ . '/db/apply_changes.php';
 require_once __DIR__ . '/helpers/time.php';
 require_once __DIR__ . '/helpers/categories.php';
-require_once __DIR__ . '/web/components/task-constants.php';
+require_once __DIR__ . '/web/components/task_constants.php';
 require_once __DIR__ . '/web/components/error.php';
 require_once __DIR__ . '/web/components/success.php';
 $db = new SQLite3(DB_PATH);
