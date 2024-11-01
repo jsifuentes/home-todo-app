@@ -107,7 +107,7 @@ $taskLists = getTasks($categoryId);
 												<?php if ($task['due_date'] && $task['status'] !== TASK_STATUS_DONE): ?>
 													<p class="rounded bg-gray-200 px-1 mr-1"
 														:class="{
-															'bg-red-400 text-white': <?= isDueToday($task['due_date']) ? 'true' : 'false' ?>,
+															'bg-red-400 text-white': <?= isPastDue($task['due_date']) || isDueToday($task['due_date']) ? 'true' : 'false' ?>,
 															'bg-yellow-500 text-white': <?= !isDueToday($task['due_date']) && isDueWithinDays($task['due_date'], 2) ? 'true' : 'false' ?>,
 														}" title="due <?= htmlspecialchars($task['due_date']) ?>">
 														due <?= getRelativeDueDateString($task['due_date']) ?><?php if (isDueWithinDays($task['due_date'], 2)): ?><span>!</span><?php endif; ?>

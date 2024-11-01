@@ -130,6 +130,17 @@ function isDueToday(DateTime|string $dueDate): bool
 	return datetimeToLocalDateTime($dueDate)->format('Y-m-d') === datetimeToLocalDateTime('now')->format('Y-m-d');
 }
 
+function isPastDue(DateTime|string $dueDate): bool
+{
+	if (is_string($dueDate)) {
+		$dueDate = datetimeToLocalDateTime($dueDate);
+	}
+
+	changeDateTimeToLocalEndOfDay($dueDate);
+
+	return $dueDate->getTimestamp() < datetimeToLocalDateTime('now')->getTimestamp();
+}
+
 function isDueWithinDays(DateTime|string $dueDate, int $maxDays, int $minDays = 0): bool
 {
 	$dueDateTime = datetimeToLocalDateTime($dueDate);
