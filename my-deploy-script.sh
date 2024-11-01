@@ -6,4 +6,4 @@ if [[ -n $(git cherry -v) ]]; then
 fi
 
 ssh-add ~/.ssh/id_rsa
-ssh -A user@server.lab.sifuen.com "cd ~/Documents/homelab/todo/ && git pull && docker compose stop todo && docker compose up --build -d todo"
+ssh -A user@todo.lab.sifuen.com "cd ~/Documents/homelab/todo/ && git pull && docker compose stop todo && docker compose up --build -d todo"
