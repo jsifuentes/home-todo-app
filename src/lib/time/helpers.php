@@ -141,14 +141,14 @@ function isPastDue(DateTime|string $dueDate): bool
 	return $dueDate->getTimestamp() < datetimeToLocalDateTime('now')->getTimestamp();
 }
 
-function isDueWithinDays(DateTime|string $dueDate, int $maxDays, int $minDays = 0): bool
+function isDueWithinDays(DateTime|string $dueDate, int $maxDays): bool
 {
 	$dueDateTime = datetimeToLocalDateTime($dueDate);
 	$nowDateTime = datetimeToLocalDateTime('now');
 	changeDateTimeToLocalEndOfDay($dueDateTime);
 	$diffInSeconds = $dueDateTime->getTimestamp() - $nowDateTime->getTimestamp();
 
-	return $diffInSeconds <= $maxDays * 86400 && $diffInSeconds >= $minDays * 86400;
+	return $diffInSeconds <= $maxDays * 86400;
 }
 
 function changeDateTimeToLocalEndOfDay(DateTime $dt): DateTime
