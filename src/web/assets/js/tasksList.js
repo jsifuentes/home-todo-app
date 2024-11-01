@@ -3,9 +3,11 @@ document.addEventListener('alpine:init', () => {
 		refreshTasksTimeout: null,
 		editingTaskId: null,
 		showDropdownTaskId: null,
+		autoRefreshTimeout: null,
+		sortable: null,
 
 		init() {
-			new Sortable(document.getElementById('todo-list-notDone'), {
+			this.sortable = new Sortable(document.getElementById('todo-list-notDone'), {
 				animation: 150,
 				ghostClass: 'bg-gray-100',
 				handle: '.handle-button',
@@ -38,11 +40,20 @@ document.addEventListener('alpine:init', () => {
 				}
 			});
 
-			setInterval(() => {
+			this.autoRefreshTimeout = setInterval(() => {
 				if (this.autoRefreshEnabled && !this.editingTaskId && !this.showDropdownTaskId) {
 					this.$dispatch('refreshTasks');
 				}
 			}, 5000);
+		},
+
+		destroy() {
+			if (this.autoRefreshTimeout) {
+				clearInterval(this.autoRefreshTimeout);
+			}
+			if (this.sortable) {
+				this.sortable.destroy();
+			}
 		},
 
 		updateStatus: (event, taskId) => {

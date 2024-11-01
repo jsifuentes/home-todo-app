@@ -20,6 +20,8 @@ document.addEventListener('alpine:init', () => {
 
 			this.$watch('filteredCategory', (newVal) => {
 				this.newTaskCategory = newVal;
+
+				this.$dispatch('refreshTasks');
 			});
 
 			this.$watch('newTaskPriority', new_value => { 

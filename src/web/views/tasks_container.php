@@ -119,10 +119,7 @@ $defaultCategoryId = $defaultCategoryIndex !== false ? $categories[$defaultCateg
 		<?php endforeach; ?>
 	</div>
 
-	<div id="tasks-list" hx-get="/views/tasks_list.php" :hx-vars="filteredCategory ? 'category_id:' + filteredCategory : ''" hx-trigger="load, refreshTasks from:body"
-		x-init="$watch('filteredCategory', (newVal) => {
-			htmx.trigger('body', 'refreshTasks');
-		})">
+	<div id="tasks-list" hx-get="/views/tasks_list.php" :hx-vars="filteredCategory ? 'category_id:' + filteredCategory : ''" hx-trigger="load, refreshTasks from:body">
 	</div>
 
 	<?php if (!$tvMode): ?>
