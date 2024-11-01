@@ -71,9 +71,12 @@ document.addEventListener('alpine:init', () => {
 				});
 		},
 
-		dueWithinHours: (dueUnixtime, hours) => {
+		dueWithinHours: (dueUnixtime, maxHours, minHours) => {
 			const now = new Date();
-			return dueUnixtime - (now.getTime() / 1000) <= hours * 60 * 60;
+			if (minHours === undefined) {
+				minHours = 0;
+			}
+			return dueUnixtime - (now.getTime() / 1000) <= maxHours * 60 * 60 && dueUnixtime - (now.getTime() / 1000) >= minHours * 60 * 60;
 		},
 	}));
 

@@ -1,7 +1,7 @@
 document.addEventListener('alpine:init', () => {
-	Alpine.data('tasksListContainer', (dueDatesConfig, priorityLevelsConfig, initialFilteredCategory) => ({
+	Alpine.data('tasksListContainer', (dueDatesConfig, priorityLevelsConfig, defaultCategoryId) => ({
 		formVisible: false,
-		filteredCategory: initialFilteredCategory,
+		filteredCategory: null,
 		refreshTasksTimeout: null,
 		autoRefreshEnabled: true,
 
@@ -10,7 +10,7 @@ document.addEventListener('alpine:init', () => {
 		dueDatesConfig: dueDatesConfig,
 		dueDateRangeChoices: Object.keys(dueDatesConfig),
 		newTaskPriority: priorityLevelsConfig.normal,
-		newTaskCategory: initialFilteredCategory,
+		newTaskCategory: defaultCategoryId,
 		newTaskDueDateRangeChoice: null,
 		clearSuccessMessageTimeout: null,
 		addTaskFormResult: null,

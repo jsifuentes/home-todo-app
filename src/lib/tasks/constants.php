@@ -1,6 +1,7 @@
 <?php
 
 const TASK_STATUS_TODO = 'todo';
+const TASK_STATUS_IN_PROGRESS = 'in_progress';
 const TASK_STATUS_DONE = 'done';
 
 const PRIORITY_LOW = 2;

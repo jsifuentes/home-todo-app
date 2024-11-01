@@ -22,13 +22,12 @@ $categories = $db->query("SELECT * FROM categories ORDER BY is_default DESC, nam
 			</thead>
 			<tbody class="divide-y divide-gray-200">
 				<?php while ($category = $categories->fetchArray(SQLITE3_ASSOC)): ?>
-					<tr x-data="{ editing: false }"
-						x-init="$watch('editing', new_value => { if (new_value) { htmx.process(htmx.find('.edit-category-form')) } })">
+					<tr x-data="{ editing: false }">
 						<td class="px-6 py-4">
-							<template x-if="!editing">
+							<div x-show="!editing">
 								<span @click="editing = true" class="cursor-pointer hover:text-blue-500"><?= htmlspecialchars($category['name']) ?></span>
-							</template>
-							<template x-if="editing">
+							</div>
+							<div x-show="editing">
 								<form class="edit-category-form flex" hx-post="/api/update_category.php" hx-swap="innerHTML" hx-target="#category-edit-form-result">
 									<input type="hidden" name="category_id" value="<?= $category['id'] ?>">
 									<input type="text" name="name"
@@ -36,7 +35,7 @@ $categories = $db->query("SELECT * FROM categories ORDER BY is_default DESC, nam
 										class="w-full px-2 py-1 border rounded">
 									<button type="submit" class="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Save</button>
 								</form>
-							</template>
+							</div>
 						</td>
 						<td class="px-6 py-4">
 							<?php if ($category['is_default']): ?>

@@ -107,12 +107,10 @@ $taskLists = getTasks($categoryId);
 												<?php if ($task['due_date'] && $task['status'] !== TASK_STATUS_DONE): ?>
 													<p class="rounded bg-gray-200 px-1 mr-1"
 														:class="{
-													'bg-yellow-500 text-white': dueWithinHours(<?= strtotime($task['due_date']) ?>, 48),
-													'bg-red-500 text-white': dueWithinHours(<?= strtotime($task['due_date']) ?>, 24)
-												}">
-														due <?= time2str($task['due_date']) ?><template x-if="dueWithinHours(<?= strtotime($task['due_date']) ?>, 48)">
-															<span>!</span>
-														</template>
+															'bg-red-400 text-white': <?= isDueToday($task['due_date']) ? 'true' : 'false' ?>,
+															'bg-yellow-500 text-white': <?= !isDueToday($task['due_date']) && isDueWithinDays($task['due_date'], 2) ? 'true' : 'false' ?>,
+														}" title="due <?= htmlspecialchars($task['due_date']) ?>">
+														due <?= getRelativeDueDateString($task['due_date']) ?><?php if (isDueWithinDays($task['due_date'], 2)): ?><span>!</span><?php endif; ?>
 													</p>
 												<?php endif; ?>
 												<?php if ($task['category_name']): ?>
@@ -120,7 +118,7 @@ $taskLists = getTasks($categoryId);
 														<?= htmlspecialchars($task['category_name']) ?>
 													</p>
 												<?php endif; ?>
-												<p class="hidden md:inline">updated <?= time2str($task['updated_at']) ?></p>
+												<p class="hidden md:inline" title="<?= $task['updated_at'] ?>">updated <?= time2str($task['updated_at']) ?></p>
 												<p class="inline md:hidden"><?= time2str($task['updated_at']) ?></p>
 											</div>
 										</div>

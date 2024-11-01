@@ -13,7 +13,7 @@ $defaultCategoryId = $defaultCategoryIndex !== false ? $categories[$defaultCateg
 		normal: "<?= PRIORITY_NORMAL ?>",
 		low: "<?= PRIORITY_LOW ?>"
 	},
-	null
+	<?= $defaultCategoryId ?>
 )'>
 	<?php if (!$tvMode): ?>
 		<div class="text-center">
@@ -53,32 +53,31 @@ $defaultCategoryId = $defaultCategoryIndex !== false ? $categories[$defaultCateg
 						<?php endforeach; ?>
 					</div>
 					<div class="mb-2">
+						<label for="due_date_selector" class="block text-sm font-medium text-gray-700 mb-2">Due Date</label>
 						<div class="space-y-2">
-							<div class="text-sm font-medium text-gray-700 mb-2">Priority</div>
 							<div class="flex text-xs justify-center gap-1 w-full">
-								<div class="flex items-center p-1 border rounded transition-all flex-grow" :class="{ 'border-blue-500 bg-blue-50': newTaskPriority === '<?= PRIORITY_LOW ?>' }">
-									<input type="radio" id="low" name="priority" value="<?= PRIORITY_LOW ?>" class="mr-2" x-model="newTaskPriority">
-									<label for="low" class="flex-grow cursor-pointer">
-										<div class="font-semibold">Lower Priority</div>
-									</label>
-								</div>
-								<div class="flex items-center p-1 border rounded transition-all flex-grow" :class="{ 'border-blue-500 bg-blue-50': newTaskPriority === '<?= PRIORITY_NORMAL ?>' }">
-									<input type="radio" id="normal" name="priority" value="<?= PRIORITY_NORMAL ?>" class="mr-2" x-model="newTaskPriority">
-									<label for="normal" class="flex-grow cursor-pointer">
-										<div class="font-semibold">Normal Priority</div>
-									</label>
-								</div>
-								<div class="flex items-center p-1 border rounded transition-all flex-grow" :class="{ 'border-blue-500 bg-blue-50': newTaskPriority === '<?= PRIORITY_HIGH ?>' }">
+								<div class="flex items-center md:p-1 px-1 py-2 border rounded transition-all flex-grow bg-red-100" :class="{ 'border-blue-500 bg-blue-50': newTaskPriority === '<?= PRIORITY_HIGH ?>' }">
 									<input type="radio" id="high" name="priority" value="<?= PRIORITY_HIGH ?>" class="mr-2" x-model="newTaskPriority">
 									<label for="high" class="flex-grow cursor-pointer">
-										<div class="font-semibold">Need to do soon</div>
+										<div class="font-semibold">Do by tomorrow!</div>
+									</label>
+								</div>
+								<div class="flex items-center md:p-1 px-1 py-2 border rounded transition-all flex-grow" :class="{ 'border-blue-500 bg-blue-50': newTaskPriority === '<?= PRIORITY_NORMAL ?>' }">
+									<input type="radio" id="normal" name="priority" value="<?= PRIORITY_NORMAL ?>" class="mr-2" x-model="newTaskPriority">
+									<label for="normal" class="flex-grow cursor-pointer">
+										<div class="font-semibold">By next week</div>
+									</label>
+								</div>
+								<div class="flex items-center md:p-1 px-1 py-2 border rounded transition-all flex-grow" :class="{ 'border-blue-500 bg-blue-50': newTaskPriority === '<?= PRIORITY_LOW ?>' }">
+									<input type="radio" id="low" name="priority" value="<?= PRIORITY_LOW ?>" class="mr-2" x-model="newTaskPriority">
+									<label for="low" class="flex-grow cursor-pointer">
+										<div class="font-semibold">By next month</div>
 									</label>
 								</div>
 							</div>
 						</div>
 					</div>
 					<div class="mb-4">
-						<label for="due_date_selector" class="block text-sm font-medium text-gray-700 mb-2">Due Date</label>
 						<div>
 							<input type="range" id="due_date_selector"
 								x-model="newTaskDueDateRangeChoice"
