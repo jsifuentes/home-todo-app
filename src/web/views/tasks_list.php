@@ -46,6 +46,14 @@ function getTasks($categoryId = null): array
 			return 0;
 		}
 
+		// If the  task is past due, it should be at the top
+		if ($aDueTimestamp < $now) {
+			return -1;
+		}
+		if ($bDueTimestamp < $now) {
+			return 1;
+		}
+
 		// Calculate if tasks are due within 24 hours
 		$aWithin24h = ($aDueTimestamp - $now) <= 86400; // 86400 seconds = 24 hours
 		$bWithin24h = ($bDueTimestamp - $now) <= 86400;
@@ -85,7 +93,13 @@ $taskLists = getTasks($categoryId);
 		<ul id="todo-list-<?= $status ?>"
 			class="list-group bg-gray-100 rounded <?php if ($tvMode): ?>grid grid-cols-2 gap-x-2<?php endif; ?>">
 			<?php foreach ($taskList as $task): ?>
-				<li class="list-group-item bg-white mb-2 rounded shadow flex flex-col <?= $task['status'] === TASK_STATUS_DONE ? 'done bg-gray-200' : '' ?>"
+				<?php
+				$isPastDue = isPastDue($task['due_date']);
+				$isDueToday = isDueToday($task['due_date']);
+				$isDueWithinTwoDays = isDueWithinDays($task['due_date'], 2);
+				?>
+
+				<li class="list-group-item bg-white mb-2 rounded shadow flex flex-col <?= $task['status'] === TASK_STATUS_DONE ? 'done bg-gray-200' : '' ?> <?= $isPastDue ? 'bg-red-50' : '' ?>"
 					data-id="<?= $task['id'] ?>">
 
 					<form class="edit-task-form" hx-post="/api/update_task.php">
@@ -104,14 +118,10 @@ $taskLists = getTasks($categoryId);
 										<p class="text-sm text-gray-500"><?= htmlspecialchars($task['body']) ?></p>
 										<div class="flex text-xs text-gray-500">
 											<?php if ($task['due_date'] && $task['status'] !== TASK_STATUS_DONE): ?>
-												<?php
-												$isPastDue = isPastDue($task['due_date']);
-												$isDueToday = isDueToday($task['due_date']);
-												$isDueWithinTwoDays = isDueWithinDays($task['due_date'], 2);
-												?>
 												<p class="rounded bg-gray-200 px-1 mr-1"
 													:class="{
-														'bg-red-400 text-white': <?= $isPastDue || $isDueToday ? 'true' : 'false' ?>,
+														'bg-red-700 text-white': <?= $isPastDue ? 'true' : 'false' ?>,
+														'bg-red-400 text-white': <?= !$isPastDue && $isDueToday ? 'true' : 'false' ?>,
 														'bg-yellow-500 text-white': <?= !$isPastDue && !$isDueToday && $isDueWithinTwoDays ? 'true' : 'false' ?>,
 													}" title="due <?= htmlspecialchars($task['due_date']) ?>">
 													due <?= getRelativeDueDateString($task['due_date']) ?><?php if ($isDueWithinTwoDays): ?><span>!</span><?php endif; ?>

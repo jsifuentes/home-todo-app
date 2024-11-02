@@ -47,7 +47,7 @@ require_once __DIR__ . '/../../init.php';
 
 <body class="bg-gray-100 lg:p-8 p-2 <?php if (!$tvMode): ?>lg:w-[800px] lg:mx-auto<?php endif; ?>">
 	<?php if (!$tvMode): ?>
-		<h1 class=" pt-4 text-3xl font-bold mb-6 text-center text-blue-600">Todo List</h1>
+		<h1 class="pt-4 text-3xl font-bold mb-2 text-center text-blue-600">Todo List</h1>
 
 		<div class="flex justify-center mb-4">
 			<a class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" href="/">
