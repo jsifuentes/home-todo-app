@@ -1,7 +1,7 @@
 # Todo List Application
 
 <p align="center">
-  <img src=".github/app-pic.png" alt="Todo List Application Screenshot">
+  <img src=".github/app-pic.png" alt="Todo List Application Screenshot" height="500">
 </p>
 
 ## Features
