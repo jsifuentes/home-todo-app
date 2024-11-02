@@ -21,23 +21,30 @@ function time2str($timestamp)
 	}
 }
 
-function getPastTimeString(DateTime $tested, DateTime $against = null)
+function getPastTimeString(DateTime $tested, DateTime $against = null, $includeWithin24Hours = true)
 {
+	// are they on the same day?
+	$sameDay = $tested->format('Y-m-d') === $against->format('Y-m-d');
+
 	$diff = $tested->diff($against);
 
-	if ($diff->days == 0) {
-		if ($diff->i === 0) {
-			if ($diff->s < 60) return 'just now';
+	if ($sameDay) {
+		if ($includeWithin24Hours) {
+			if ($diff->i === 0) {
+				if ($diff->s < 60) return 'just now';
+			}
+			if ($diff->h === 0) {
+				if ($diff->i === 1) return '1 minute ago';
+				if ($diff->i < 60) return $diff->i . ' minutes ago';
+			}
+			if ($diff->h === 1) return '1 hour ago';
+			if ($diff->h < 24) return $diff->h . ' hours ago';
+		} else {
+			return 'earlier today';
 		}
-		if ($diff->h === 0) {
-			if ($diff->i === 1) return '1 minute ago';
-			if ($diff->i < 60) return $diff->i . ' minutes ago';
-		}
-		if ($diff->h === 1) return '1 hour ago';
-		if ($diff->h < 24) return $diff->h . ' hours ago';
 	}
 
-	if ($diff->days == 1) return 'yesterday';
+	if ($diff->days <= 1) return 'yesterday';
 	if ($diff->days < 7) return $diff->days . ' days ago';
 	if ($diff->days < 31) return ceil($diff->days / 7) . ' weeks ago';
 	if ($diff->days < 60) return 'last month';

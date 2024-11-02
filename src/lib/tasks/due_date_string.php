@@ -35,6 +35,6 @@ function getRelativeDueDateString(int|string|DateTime $timestamp): string
 	if ($diff > 0) {
 		return getFutureTimeString($dueDateTime, $now);
 	} else {
-		return getPastTimeString($dueDateTime, $now);
+		return getPastTimeString($dueDateTime, $now, false);
 	}
 }
