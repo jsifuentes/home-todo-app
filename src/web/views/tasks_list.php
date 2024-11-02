@@ -100,7 +100,7 @@ $taskLists = getTasks($categoryId);
 				$isDueWithinTwoDays = isDueWithinDays($task['due_date'], 2);
 				?>
 
-				<li class="list-group-item mb-2 rounded shadow flex flex-col <?= $task['status'] === TASK_STATUS_DONE ? 'done bg-gray-200' : 'bg-white' ?> <?= !$isDone && $isPastDue ? 'bg-red-50' : '' ?>"
+				<li class="list-group-item mb-2 rounded shadow flex flex-col <?= $task['status'] === TASK_STATUS_DONE ? 'done bg-gray-200' : 'bg-white' ?> <?= !$isDone && $isPastDue ? 'border-2 border-red-400' : '' ?>"
 					data-id="<?= $task['id'] ?>">
 
 					<form class="edit-task-form" hx-post="/api/update_task.php">
