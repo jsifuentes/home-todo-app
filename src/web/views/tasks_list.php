@@ -94,12 +94,13 @@ $taskLists = getTasks($categoryId);
 			class="list-group bg-gray-100 rounded <?php if ($tvMode): ?>grid grid-cols-2 gap-x-2<?php endif; ?>">
 			<?php foreach ($taskList as $task): ?>
 				<?php
+				$isDone = $task['status'] === TASK_STATUS_DONE;
 				$isPastDue = isPastDue($task['due_date']);
 				$isDueToday = isDueToday($task['due_date']);
 				$isDueWithinTwoDays = isDueWithinDays($task['due_date'], 2);
 				?>
 
-				<li class="list-group-item bg-white mb-2 rounded shadow flex flex-col <?= $task['status'] === TASK_STATUS_DONE ? 'done bg-gray-200' : '' ?> <?= $isPastDue ? 'bg-red-50' : '' ?>"
+				<li class="list-group-item bg-white mb-2 rounded shadow flex flex-col <?= $task['status'] === TASK_STATUS_DONE ? 'done bg-gray-200' : '' ?> <?= !$isDone && $isPastDue ? 'bg-red-50' : '' ?>"
 					data-id="<?= $task['id'] ?>">
 
 					<form class="edit-task-form" hx-post="/api/update_task.php">
@@ -109,10 +110,10 @@ $taskLists = getTasks($categoryId);
 								@click="showDropdownTaskId = showDropdownTaskId === <?= $task['id'] ?> ? null : <?= $task['id'] ?>">
 								<div class="status-checkbox mx-auto flex items-center">
 									<input type="checkbox" class="mr-3 h-5 w-5"
-										<?php if ($task['status'] === TASK_STATUS_DONE): ?>checked<?php endif; ?>
+										<?php if ($isDone): ?>checked<?php endif; ?>
 										@click.stop="updateStatus($event, <?= $task['id'] ?>)">
 								</div>
-								<div <?php if ($task['status'] === TASK_STATUS_DONE): ?>:class="{ 'line-through': !editingTaskId }" <?php endif; ?> class="w-full">
+								<div <?php if ($isDone): ?>:class="{ 'line-through': !editingTaskId }" <?php endif; ?> class="w-full">
 									<div x-show="editingTaskId !== <?= $task['id'] ?>">
 										<h3><?= htmlspecialchars($task['title']) ?></h3>
 										<p class="text-sm text-gray-500"><?= htmlspecialchars($task['body']) ?></p>
