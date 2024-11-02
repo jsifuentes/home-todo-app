@@ -1,5 +1,9 @@
 # Todo List Application
 
+<p align="center">
+  <img src=".github/app-pic.png" alt="Todo List Application Screenshot">
+</p>
+
 ## Features
 
 - Create, edit, and delete tasks
