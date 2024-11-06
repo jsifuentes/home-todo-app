@@ -16,6 +16,8 @@ require_once __DIR__ . '/lib/time/helpers.php';
 require_once __DIR__ . '/lib/categories/db.php';
 require_once __DIR__ . '/lib/tasks/constants.php';
 require_once __DIR__ . '/lib/tasks/due_date_string.php';
+require_once __DIR__ . '/lib/tasks/tasks.php';
+require_once __DIR__ . '/lib/tasks/recurring_tasks.php';
 require_once __DIR__ . '/web/components/error.php';
 require_once __DIR__ . '/web/components/success.php';
 
@@ -25,3 +27,5 @@ $db = new SQLite3(DB_PATH);
 
 $tvMode = isset($_GET['tv']);
 $settings = mergeSettingsFromDatabaseWithDefaults();
+
+$additionalScripts = [];

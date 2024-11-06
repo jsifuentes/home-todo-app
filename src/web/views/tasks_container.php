@@ -89,6 +89,76 @@ $defaultCategoryId = $defaultCategoryIndex !== false ? $categories[$defaultCateg
 							<input type="hidden" :value="Object.keys(dueDatesConfig)[newTaskDueDateRangeChoice]" name="due_date">
 						</div>
 					</div>
+					<div class="mb-4">
+						<div class="flex items-center">
+							<input type="checkbox" id="is_recurring" name="is_recurring" x-model="newTaskRecurringToggle" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+							<label for="is_recurring" class="ml-2 block text-sm text-gray-700">Make this task recurring</label>
+						</div>
+
+						<div x-show="newTaskRecurringToggle" class="mt-3 flex gap-2 items-center flex-wrap">
+							<span class="text-sm text-gray-700">Repeat every</span>
+							<input type="number"
+								name="recurrence_amount"
+								min="1"
+								class="block w-10 p-1 rounded border border-gray-300 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+								placeholder="1">
+
+							<select name="recurrence_unit" class="block rounded p-1 border border-gray-300 focus:border-blue-500 focus:ring-blue-500 sm:text-sm" x-model="newTaskRecurrenceUnit">
+								<option value="d">Days</option>
+								<option value="w">Weeks</option>
+								<option value="m">Months</option>
+								<option value="y">Years</option>
+							</select>
+
+							<div x-show="newTaskRecurrenceUnit === 'w'" class="flex items-center gap-2 items-center">
+								<span class="text-sm text-gray-700">on</span>
+								<select name="recurrence_day" class="block rounded p-1 border border-gray-300 focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+									<option value="1">Monday</option>
+									<option value="2">Tuesday</option>
+									<option value="3">Wednesday</option>
+									<option value="4">Thursday</option>
+									<option value="5">Friday</option>
+									<option value="6">Saturday</option>
+									<option value="7">Sunday</option>
+								</select>
+							</div>
+
+							<div x-show="newTaskRecurrenceUnit === 'm'" class="flex items-center gap-2">
+								<span class="text-sm text-gray-700">on day</span>
+								<input type="number"
+									name="recurrence_day_of_month"
+									min="1"
+									max="31"
+									class="block w-14 p-1 rounded border border-gray-300 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+									placeholder="1">
+							</div>
+
+							<div x-show="newTaskRecurrenceUnit === 'y'" class="flex items-center gap-2">
+								<span class="text-sm text-gray-700">on</span>
+								<select name="recurrence_month" class="block rounded p-1 border border-gray-300 focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+									<option value="1">January</option>
+									<option value="2">February</option>
+									<option value="3">March</option>
+									<option value="4">April</option>
+									<option value="5">May</option>
+									<option value="6">June</option>
+									<option value="7">July</option>
+									<option value="8">August</option>
+									<option value="9">September</option>
+									<option value="10">October</option>
+									<option value="11">November</option>
+									<option value="12">December</option>
+								</select>
+								<span class="text-sm text-gray-700">day</span>
+								<input type="number"
+									name="recurrence_day_of_month"
+									min="1"
+									max="31"
+									class="block w-14 p-1 rounded border border-gray-300 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+									placeholder="1">
+							</div>
+						</div>
+					</div>
 					<button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full">
 						Add
 					</button>

@@ -6,6 +6,9 @@ document.addEventListener('alpine:init', () => {
 		autoRefreshTimeout: null,
 		sortable: null,
 
+		editRecurringToggle: false,
+		editRecurrenceUnit: 'd',
+
 		init() {
 			this.sortable = new Sortable(document.getElementById('todo-list-notDone'), {
 				animation: 150,
@@ -36,7 +39,10 @@ document.addEventListener('alpine:init', () => {
 
 			this.$watch('editingTaskId', new_value => {
 				if (new_value) {
-					htmx.process(htmx.find('.edit-task-form'))
+					// Set initial values based on the task being edited
+					const form = document.querySelector(`li[data-id="${new_value}"] form`);
+					this.editRecurringToggle = form.querySelector('[name="is_recurring"]')?.getAttribute('orig-checked') === 'true' || false;
+					this.editRecurrenceUnit = form.querySelector('[name="recurrence_unit"]')?.getAttribute('orig-value') || 'd';
 				}
 			});
 

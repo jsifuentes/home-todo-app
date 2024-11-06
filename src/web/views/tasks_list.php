@@ -13,7 +13,22 @@ function getTasks($categoryId = null): array
 
 	// Prepare and execute the query
 	$bindValues = [];
-	$query = "SELECT tasks.*, categories.name AS category_name FROM tasks LEFT JOIN categories ON tasks.category_id = categories.id";
+	$query = "
+		SELECT 
+			tasks.*,
+			categories.name AS category_name,
+			recurring_tasks.id AS recurring_task_id,
+			recurring_tasks.is_active AS is_recurring_active,
+			recurring_tasks.recurrence_unit,
+			recurring_tasks.recurrence_amount,
+			recurring_tasks.recurrence_day_of_week,
+			recurring_tasks.recurrence_day_of_month,
+			recurring_tasks.recurrence_month,
+			IFNULL(recurring_tasks.id, 0) AS is_recurring_task
+		FROM tasks 
+		LEFT JOIN categories ON tasks.category_id = categories.id
+		LEFT JOIN recurring_tasks ON tasks.linked_to_recurring_id = recurring_tasks.id
+	";
 	if ($categoryId) {
 		$query .= " WHERE category_id = :category_id";
 		$bindValues[':category_id'] = $categoryId;
@@ -117,7 +132,7 @@ $taskLists = getTasks($categoryId);
 									<div x-show="editingTaskId !== <?= $task['id'] ?>">
 										<h3><?= htmlspecialchars($task['title']) ?></h3>
 										<p class="text-sm text-gray-500"><?= htmlspecialchars($task['body']) ?></p>
-										<div class="flex text-xs text-gray-500">
+										<div class="flex text-xs text-gray-500 items-center">
 											<?php if ($task['due_date'] && $task['status'] !== TASK_STATUS_DONE): ?>
 												<p class="rounded bg-gray-200 px-1 mr-1"
 													:class="{
@@ -125,13 +140,20 @@ $taskLists = getTasks($categoryId);
 														'bg-red-400 text-white': <?= !$isPastDue && $isDueToday ? 'true' : 'false' ?>,
 														'bg-yellow-500 text-white': <?= !$isPastDue && !$isDueToday && $isDueWithinTwoDays ? 'true' : 'false' ?>,
 													}" title="due <?= htmlspecialchars($task['due_date']) ?>">
-													due <?= getRelativeDueDateString($task['due_date']) ?><?php if ($isDueWithinTwoDays): ?><span>!</span><?php endif; ?>
+													<?= $isPastDue ? 'was ' : '' ?>due <?= getRelativeDueDateString($task['due_date']) ?><?php if ($isDueWithinTwoDays): ?><span>!</span><?php endif; ?>
 												</p>
 											<?php endif; ?>
 											<?php if ($task['category_name']): ?>
 												<p class="rounded bg-gray-200 px-1 mr-1">
 													<?= htmlspecialchars($task['category_name']) ?>
 												</p>
+											<?php endif; ?>
+											<?php if ($task['is_recurring_task']): ?>
+												<span class="mr-1">
+													<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="<?php if ($task['is_recurring_active']): ?>currentColor<?php else: ?>#ffbbbb<?php endif; ?>" class="size-4">
+														<path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+													</svg>
+												</span>
 											<?php endif; ?>
 											<p class="hidden md:inline" title="<?= $task['updated_at'] ?>">updated <?= time2str($task['updated_at']) ?></p>
 											<p class="inline md:hidden"><?= time2str($task['updated_at']) ?></p>
@@ -154,6 +176,17 @@ $taskLists = getTasks($categoryId);
 												</option>
 											<?php endforeach; ?>
 										</select>
+
+										<?php if ($task['is_recurring_task']): ?>
+											<div class="mt-4">
+												<div class="flex items-center gap-1">
+													<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="<?php if ($task['is_recurring_active']): ?>currentColor<?php else: ?>#ffbbbb<?php endif; ?>" class="size-4">
+														<path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+													</svg>
+													<span class="text-xs text-gray-500">This is a recurring task. Recurring tasks can be edited on the Settings page.</span>
+												</div>
+											</div>
+										<?php endif; ?>
 									</div>
 								</div>
 							</div>

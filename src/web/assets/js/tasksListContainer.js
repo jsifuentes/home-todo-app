@@ -12,6 +12,8 @@ document.addEventListener('alpine:init', () => {
 		newTaskPriority: priorityLevelsConfig.normal,
 		newTaskCategory: defaultCategoryId,
 		newTaskDueDateRangeChoice: null,
+		newTaskRecurringToggle: false,
+		newTaskRecurrenceUnit: 'd',
 		clearSuccessMessageTimeout: null,
 		addTaskFormResult: null,
 

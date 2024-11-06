@@ -59,8 +59,8 @@ function getFutureTimeString(DateTime $tested, DateTime $against)
 
 	$diff = $tested->diff($against);
 
-	if ($diff->days == 0) return 'end of day today';
-	if ($diff->days == 1) return 'end of day tomorrow';
+	if ($diff->days == 0) return 'today';
+	if ($diff->days == 1) return 'tomorrow';
 	if ($diff->days < 5) return $tested->format('l');
 	if ($diff->days < 7 + (7 - $tested->format('w'))) return 'next ' . $tested->format('l');
 	if (ceil($diff->days / 7) < 4) return 'in ' . ceil($diff->days / 7) . ' weeks';

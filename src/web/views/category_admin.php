@@ -16,14 +16,13 @@ $categories = $db->query("SELECT * FROM categories ORDER BY is_default DESC, nam
 				<tr>
 					<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
 					<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Default</th>
-					<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created</th>
 					<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
 				</tr>
 			</thead>
 			<tbody class="divide-y divide-gray-200">
 				<?php while ($category = $categories->fetchArray(SQLITE3_ASSOC)): ?>
 					<tr x-data="{ editing: false }">
-						<td class="px-6 py-4">
+						<td class="p-2 md:px-6 md:py-4">
 							<div x-show="!editing">
 								<span @click="editing = true" class="cursor-pointer hover:text-blue-500"><?= htmlspecialchars($category['name']) ?></span>
 							</div>
@@ -37,7 +36,7 @@ $categories = $db->query("SELECT * FROM categories ORDER BY is_default DESC, nam
 								</form>
 							</div>
 						</td>
-						<td class="px-6 py-4">
+						<td class="p-2 md:px-6 md:py-4">
 							<?php if ($category['is_default']): ?>
 								<span class="text-green-500">✓</span>
 							<?php else: ?>
@@ -49,10 +48,9 @@ $categories = $db->query("SELECT * FROM categories ORDER BY is_default DESC, nam
 								</button>
 							<?php endif; ?>
 						</td>
-						<td class="px-6 py-4"><?= date('Y-m-d', strtotime($category['created_at'])) ?></td>
-						<td class="px-6 py-4">
-							<button @click="editing = true" x-show="!editing" class="text-blue-500 hover:text-blue-900">Edit</button>
-							<button @click="editing = false" x-show="editing" class="text-red-500 hover:text-red-900">Cancel</button>
+						<td class="p-2 md:px-6 md:py-4 flex justify-center text-center flex-col gap-2">
+							<button @click="editing = true" x-show="!editing" class="block text-center md:inline text-blue-500 hover:text-blue-900">Edit</button>
+							<button @click="editing = false" x-show="editing" class="block text-center md:inline text-red-500 hover:text-red-900">Cancel</button>
 							<?php if (!$category['is_default']): ?>
 								<button
 									hx-delete="/api/delete_category.php?categoryId=<?= $category['id'] ?>"

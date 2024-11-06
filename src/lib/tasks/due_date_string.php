@@ -24,11 +24,11 @@ function getRelativeDueDateString(int|string|DateTime $timestamp): string
 
 	$isDueToday = isDueToday($dueDateTime);
 	if ($isDueToday) {
-		return 'end of day today';
+		return 'today';
 	}
 
 	if ($diff > 0 && $dayDiff === 0 && !$isDueToday) {
-		return 'end of day tomorrow';
+		return 'tomorrow';
 	}
 
 	// is the task due in the future?

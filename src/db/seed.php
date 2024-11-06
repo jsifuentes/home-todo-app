@@ -27,25 +27,83 @@ foreach ($categories as $category) {
 	$stmt->execute();
 }
 
-// Prepare the SQL statement
-$stmt = $db->prepare('INSERT INTO tasks (id, title, body, sort_order, status, category_id, due_date) VALUES (:id, :title, :body, :sort_order, :status, :category_id, :due_date)');
-
-// Insert each task
+// Insert tasks using createTask helper
 foreach ($tasks as $task) {
 	$endDueDate = calculateEndDate($task['due_date']);
-	$stmt->bindValue(':id', $task['id'], SQLITE3_INTEGER);
-	$stmt->bindValue(':title', $task['title'], SQLITE3_TEXT);
-	$stmt->bindValue(':body', $task['body'], SQLITE3_TEXT);
-	$stmt->bindValue(':sort_order', $task['sort_order'], SQLITE3_INTEGER);
-	$stmt->bindValue(':status', $task['status'], SQLITE3_TEXT);
-	$stmt->bindValue(':category_id', $task['category_id'], SQLITE3_INTEGER);
-	$stmt->bindValue(':due_date', $endDueDate->format('Y-m-d H:i:s'), SQLITE3_TEXT);
 
-	if (!$stmt->execute()) {
+	$taskObj = new Task();
+	$taskObj->title = $task['title'];
+	$taskObj->body = $task['body'];
+	$taskObj->sortOrder = $task['sort_order'];
+	$taskObj->dueDate = $endDueDate->format('Y-m-d H:i:s');
+	$taskObj->dueDateIncrementSelected = $task['due_date'];
+	$taskObj->categoryId = $task['category_id'];
+
+	if (!createTask($db, $taskObj)) {
 		echo "Error inserting task: " . $db->lastErrorMsg() . "\n";
 	} else {
 		echo "Inserted task: " . $task['title'] . "\n";
 	}
+}
+
+// Create recurring tasks
+$recurring_tasks = [
+	[
+		'title' => 'Take out trash',
+		'body' => '',
+		'due_date_increment_selected' => '1d',
+		'category_id' => 1,
+		'recurrence_amount' => 1,
+		'recurrence_unit' => 'w',
+		'recurrence_day_of_week' => 2, // Tuesday
+		'recurrence_day_of_month' => null,
+		'recurrence_month' => null
+	],
+	[
+		'title' => 'Clean kitchen',
+		'body' => 'Deep clean all surfaces',
+		'due_date_increment_selected' => '1d',
+		'category_id' => 1,
+		'recurrence_amount' => 2,
+		'recurrence_unit' => 'w',
+		'recurrence_day_of_week' => 6, // Saturday
+		'recurrence_day_of_month' => null,
+		'recurrence_month' => null
+	],
+	[
+		'title' => 'Pay rent',
+		'body' => '',
+		'due_date_increment_selected' => '1d',
+		'category_id' => 1,
+		'recurrence_amount' => 1,
+		'recurrence_unit' => 'm',
+		'recurrence_day_of_week' => null,
+		'recurrence_day_of_month' => 1,
+		'recurrence_month' => null
+	]
+];
+
+// Insert recurring tasks using createRecurringTask helper
+foreach ($recurring_tasks as $task) {
+	$recurringTask = new RecurringTask();
+	$recurringTask->title = $task['title'];
+	$recurringTask->body = $task['body'];
+	$recurringTask->dueDateIncrementSelected = $task['due_date_increment_selected'];
+	$recurringTask->categoryId = $task['category_id'];
+	$recurringTask->recurrenceAmount = $task['recurrence_amount'];
+	$recurringTask->recurrenceUnit = $task['recurrence_unit'];
+	$recurringTask->recurrenceDayOfWeek = $task['recurrence_day_of_week'];
+	$recurringTask->recurrenceDayOfMonth = $task['recurrence_day_of_month'];
+	$recurringTask->recurrenceMonth = $task['recurrence_month'];
+
+	if (!createRecurringTask($db, $recurringTask)) {
+		echo "Error inserting recurring task: " . $db->lastErrorMsg() . "\n";
+	} else {
+		echo "Inserted recurring task: " . $task['title'] . "\n";
+	}
+
+	// Create the task using the new Task class and createTask function
+	createTaskFromRecurringTask($db, $recurringTask);
 }
 
 echo "Seeding completed.\n";

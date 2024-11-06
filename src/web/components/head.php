@@ -10,8 +10,15 @@ require_once __DIR__ . '/../../init.php';
 	<meta name="htmx-config" content='{"responseHandling": [{"code":".*", "swap": true}]}' />
 	<title>Todos</title>
 	<script src="https://unpkg.com/htmx.org@2.0.3"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@alpinejs/focus@3.x.x/dist/cdn.min.js"></script>
 	<script src="//unpkg.com/alpinejs" defer></script>
 	<script src="https://cdn.tailwindcss.com"></script>
+	<script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/alpine-morph.js"></script>
+	<script src="/assets/js/Sortable.js"></script>
+	<script src="/assets/js/tasksListContainer.js"></script>
+	<script src="/assets/js/tasksList.js"></script>
+
+
 	<style>
 		[x-cloak] {
 			display: none;
@@ -33,10 +40,6 @@ require_once __DIR__ . '/../../init.php';
 			font-style: italic;
 		}
 	</style>
-	<script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/alpine-morph.js"></script>
-	<script src="/assets/js/Sortable.js"></script>
-	<script src="/assets/js/tasksListContainer.js"></script>
-	<script src="/assets/js/tasksList.js"></script>
 
 	<link href='/apple-touch-icon.png' rel='apple-touch-icon' type='image/png'>
 	<link rel="manifest" href="/assets/site.webmanifest">

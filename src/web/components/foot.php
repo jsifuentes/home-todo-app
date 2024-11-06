@@ -8,4 +8,8 @@
 	<?php endif; ?>
 </script>
 
+<?php foreach ($additionalScripts as $script): ?>
+	<script src="<?= $script ?>"></script>
+<?php endforeach; ?>
+
 </html>
