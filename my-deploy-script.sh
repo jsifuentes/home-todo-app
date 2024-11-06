@@ -9,4 +9,10 @@ DEPLOY_PATH="~/Documents/homelab/todo"
 
 ssh-add ~/.ssh/id_rsa
 ssh -A user@todo.lab.sifuen.com "cd $DEPLOY_PATH && git pull && docker compose stop todo && docker compose up --build -d todo"
-ssh -A user@todo.lab.sifuen.com "echo '0 * * * * bash -c \"cd $DEPLOY_PATH && docker compose exec todo php cron/create_tasks_from_recurring.php\"' > /etc/cron.d/create_tasks_from_recurring"
+
+# check if the cronjob already exists using cron -l and grep
+echo "# Checking if the cronjob already exists"
+if ! ssh -A user@todo.lab.sifuen.com "crontab -l | grep 'create_tasks_from_recurring'" > /dev/null 2>&1; then
+	echo "# Cronjob does not exist, adding it"
+	ssh -A user@todo.lab.sifuen.com "crontab -l | { cat; echo '0 * * * * bash -c \"cd $DEPLOY_PATH && docker compose exec todo php cron/create_tasks_from_recurring.php\"'; } | crontab -"
+fi
