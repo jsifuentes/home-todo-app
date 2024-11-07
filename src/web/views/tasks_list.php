@@ -118,7 +118,7 @@ $taskLists = getTasks($categoryId);
 				<li class="list-group-item mb-2 rounded shadow flex flex-col <?= $task['status'] === TASK_STATUS_DONE ? 'done bg-gray-200' : 'bg-white' ?> <?= !$isDone && $isPastDue ? 'border-2 border-red-400' : '' ?>"
 					data-id="<?= $task['id'] ?>">
 
-					<form class="edit-task-form" hx-post="/api/update_task.php">
+					<form class="edit-task-form" hx-post="/api/update_task.php" hx-disinherit="*">
 						<input type="hidden" name="task_id" value="<?= $task['id'] ?>">
 						<div class="flex w-full items-stretch p-2">
 							<div class="flex items-center w-full items-stretch cursor-pointer"
