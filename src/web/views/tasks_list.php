@@ -30,7 +30,7 @@ function getTasks($categoryId = null): array
 		LEFT JOIN recurring_tasks ON tasks.linked_to_recurring_id = recurring_tasks.id
 	";
 	if ($categoryId) {
-		$query .= " WHERE category_id = :category_id";
+		$query .= " WHERE tasks.category_id = :category_id";
 		$bindValues[':category_id'] = $categoryId;
 	}
 	$query .= " ORDER BY sort_order ASC, updated_at DESC";
