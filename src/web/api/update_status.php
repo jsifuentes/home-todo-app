@@ -27,4 +27,5 @@ if (!$result) {
 	throw new Exception("Failed to update task status: " . $db->lastErrorMsg());
 }
 
+header('HX-Trigger: taskStatusUpdated');
 echo renderSuccess("Task status updated successfully.");

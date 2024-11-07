@@ -126,7 +126,9 @@ $taskLists = getTasks($categoryId);
 								<div class="status-checkbox mx-auto flex items-center">
 									<input type="checkbox" class="mr-3 h-5 w-5"
 										<?php if ($isDone): ?>checked<?php endif; ?>
-										@click.stop="updateStatus($event, <?= $task['id'] ?>)">
+										hx-post="/api/update_status.php"
+										hx-vals='{"task_id": "<?= $task['id'] ?>", "new_status": "<?= $isDone ? 'todo' : 'done' ?>"}'
+										hx-target="closest form">
 								</div>
 								<div <?php if ($isDone): ?>:class="{ 'line-through': !editingTaskId }" <?php endif; ?> class="w-full">
 									<div x-show="editingTaskId !== <?= $task['id'] ?>">

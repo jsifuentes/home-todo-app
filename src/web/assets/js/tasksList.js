@@ -51,41 +51,33 @@ document.addEventListener('alpine:init', () => {
 					this.$dispatch('refreshTasks');
 				}
 			}, 5000);
+
+			this.onTaskStatusUpdated = () => {
+				console.log('Status updated successfully');
+				// Trigger a refresh of the task list on htmx
+				if (this.refreshTasksTimeout) {
+					clearTimeout(this.refreshTasksTimeout);
+				}
+
+				this.refreshTasksTimeout = setTimeout(() => {
+					document.body.dispatchEvent(new Event('refreshTasks'));
+				}, 1000);
+			};
+
+			document.body.addEventListener('taskStatusUpdated', this.onTaskStatusUpdated);
 		},
 
 		destroy() {
+			console.log('Destroying tasksList');
 			if (this.autoRefreshTimeout) {
 				clearInterval(this.autoRefreshTimeout);
 			}
+
 			if (this.sortable) {
 				this.sortable.destroy();
 			}
-		},
 
-		updateStatus: (event, taskId) => {
-			const newStatus = event.target.checked ? 'done' : 'todo';
-			fetch('/api/update_status.php', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/x-www-form-urlencoded',
-					},
-					body: `task_id=${taskId}&new_status=${newStatus}`
-				})
-				.then(data => {
-					console.log('Status updated successfully');
-					// Trigger a refresh of the task list on htmx
-					if (this.refreshTasksTimeout) {
-						clearTimeout(this.refreshTasksTimeout);
-					}
-
-					this.refreshTasksTimeout = setTimeout(() => {
-						document.body.dispatchEvent(new Event('refreshTasks'));
-					}, 1000);
-				})
-				.catch(error => {
-					console.error('Error:', error);
-					event.target.checked = !event.target.checked; // Revert the checkbox state
-				});
+			document.body.removeEventListener('taskStatusUpdated', this.onTaskStatusUpdated);
 		},
 
 		dueWithinHours: (dueUnixtime, maxHours, minHours) => {
