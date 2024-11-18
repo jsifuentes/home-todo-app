@@ -3,7 +3,7 @@ require_once __DIR__ . '/../init.php';
 
 $now = datetimeToLocalDateTime('now');
 $currentHour = (int)$now->format('G');
-if ($currentHour !== 9) {
+if ($currentHour !== 5) {
 	exit("Not running - current hour is {$currentHour}, waiting for 9\n");
 }
 
