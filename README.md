@@ -26,7 +26,7 @@
 1. Clone the repository
 2. Make sure you have PHP 8.2+ installed
 3. Run the development server: `./start.sh`
-4. Visit `http://localhost:8080` in your browser
+4. Visit `http://localhost:8081` in your browser
 
 ## Deploying to a server
 
