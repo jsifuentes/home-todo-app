@@ -16,20 +16,21 @@ $defaultCategoryId = $defaultCategoryIndex !== false ? $categories[$defaultCateg
 	<?= $defaultCategoryId ?>
 )'>
 	<?php if (!$tvMode): ?>
-		<div class="text-center">
-			<button @click="formVisible = !formVisible"
-				hx-get="/views/add_task_form.php"
-				hx-trigger="click"
-				hx-target="#add-task-form"
-				:class="formVisible ? 'bg-gray-300 hover:bg-gray-200 text-gray-600' : 'bg-blue-700 hover:bg-blue-400 text-white'"
-				class="bg-blue-500 hover:bg-blue-700 text-white font-bold mt-2 py-2 px-4 rounded lg:w-[200px]"
-				x-text="formVisible ? 'Close' : 'Add Task'">
-			</button>
-		</div>
-
 		<div class="mx-auto">
+			<div class="text-center">
+				<button @click="formVisible = !formVisible"
+					hx-get="/views/add_task_form.php"
+					hx-trigger="click"
+					hx-target="#add-task-form"
+					hx-indicator=".loading"
+					:class="formVisible ? 'bg-gray-300 hover:bg-gray-200 text-gray-600' : 'bg-blue-700 hover:bg-blue-400 text-white'"
+					class="bg-blue-500 hover:bg-blue-700 text-white font-bold mt-2 py-2 px-4 rounded lg:w-[200px]"
+					x-text="formVisible ? 'Close' : 'Add Task'">
+				</button>
+			</div>
+
+			<div class="loading"></div>
 			<div id="add-task-form" x-show="formVisible" x-cloak class="bg-white p-4 rounded-lg shadow-md max-w-md mx-auto my-4">
-				<div class="loading"></div>
 			</div>
 		</div>
 	<?php endif; ?>

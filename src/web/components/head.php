@@ -43,7 +43,7 @@ require_once __DIR__ . '/../../init.php';
 		.loading {
 			width: 50px;
 			aspect-ratio: 1;
-			display: grid;
+			display: none;
 			border-radius: 50%;
 			background:
 				linear-gradient(0deg ,rgb(0 0 0/50%) 30%,#0000 0 70%,rgb(0 0 0/100%) 0) 50%/8% 100%,
@@ -51,6 +51,9 @@ require_once __DIR__ . '/../../init.php';
 			background-repeat: no-repeat;
 			animation: l23 1s infinite steps(12);
 			margin: 0 auto;
+		}
+		.loading.htmx-request {
+			display: grid;
 		}
 		.loading::before,
 		.loading::after {

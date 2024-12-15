@@ -21,6 +21,12 @@ document.addEventListener('alpine:init', () => {
 		init() {
 			this.newTaskDueDateRangeChoice = this.dueDateRangeChoices.indexOf('7d');
 
+			this.$watch('formVisible', (newVal) => {
+				if (!newVal) {
+					document.getElementById('add-task-form').innerHTML = '';
+				}
+			});
+
 			this.$watch('filteredCategory', (newVal) => {
 				this.newTaskCategory = newVal;
 
