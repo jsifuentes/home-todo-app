@@ -67,6 +67,11 @@ document.addEventListener('alpine:init', () => {
 			};
 
 			document.body.addEventListener('taskStatusUpdated', this.onTaskStatusUpdated);
+
+			if (this.keepOpenTaskId) {
+				this.showDropdownTaskId = parseInt(this.keepOpenTaskId);
+				this.keepOpenTaskId = null;
+			}
 		},
 
 		destroy() {

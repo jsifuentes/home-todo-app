@@ -18,6 +18,8 @@ document.addEventListener('alpine:init', () => {
 		clearSuccessMessageTimeout: null,
 		addTaskFormResult: null,
 
+		keepOpenTaskId: null,
+
 		init() {
 			this.newTaskDueDateRangeChoice = this.dueDateRangeChoices.indexOf('7d');
 
@@ -58,14 +60,16 @@ document.addEventListener('alpine:init', () => {
 				}, 2000);
 			});
 
-			document.body.addEventListener('tasksUpdated', () => {
+			document.body.addEventListener('tasksUpdated', (evt) => {
 				if (this.refreshTasksTimeout) {
 					clearTimeout(this.refreshTasksTimeout);
 				}
 
-				this.refreshTasksTimeout = setTimeout(() => {
-					this.$dispatch('refreshTasks');
-				}, 1000);
+				this.$dispatch('refreshTasks');
+
+				if (evt.detail.keepOpen) {
+					this.keepOpenTaskId = evt.detail.keepOpen;
+				}
 			});
 		},
 

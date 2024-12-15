@@ -114,7 +114,9 @@ if (!$result) {
 }
 
 header('HX-Trigger: ' . json_encode([
-	'taskUpdated' => [],
+	'tasksUpdated' => [
+		'keepOpen' => $addTimeToDueDate !== null ? $taskId : null,
+	],
 	'addNotification' => [
 		'type' => 'success',
 		'message' => 'Task updated successfully',
