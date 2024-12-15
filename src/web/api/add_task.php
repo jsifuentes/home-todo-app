@@ -5,7 +5,8 @@ header('Content-Type: text/html; charset=utf-8');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 	http_response_code(405);
-	die(renderError("Invalid request method. Please use POST."));
+	sendSimpleErrorNotificationTrigger("Invalid request method. Please use POST.");
+	exit;
 }
 
 $title = $_POST['title'] ?? '';
@@ -24,13 +25,13 @@ $recurrenceMonth = $_POST['recurrence_month'] ?? null;
 
 if (empty($title) || !is_numeric($sortOrder) || empty($dueDateIncrementSelected) || !is_numeric($categoryId)) {
 	http_response_code(400);
-	echo renderError("All fields are required.");
+	sendSimpleErrorNotificationTrigger("All fields are required.");
 	exit;
 }
 
 if (!isset(DUE_DATE_LABELS[$dueDateIncrementSelected])) {
 	http_response_code(400);
-	echo renderError("Invalid due date.");
+	sendSimpleErrorNotificationTrigger("Invalid due date.");
 	exit;
 }
 
@@ -38,13 +39,13 @@ if (!isset(DUE_DATE_LABELS[$dueDateIncrementSelected])) {
 if ($isRecurring) {
 	if (empty($recurrenceAmount) || !is_numeric($recurrenceAmount) || $recurrenceAmount < 1) {
 		http_response_code(400);
-		echo renderError("Invalid recurrence amount.");
+		sendSimpleErrorNotificationTrigger("Invalid recurrence amount.");
 		exit;
 	}
 
 	if (!in_array($recurrenceUnit, ['d', 'w', 'm', 'y'])) {
 		http_response_code(400);
-		echo renderError("Invalid recurrence unit.");
+		sendSimpleErrorNotificationTrigger("Invalid recurrence unit.");
 		exit;
 	}
 
@@ -53,32 +54,32 @@ if ($isRecurring) {
 		case 'w':
 			if (empty($recurrenceDayOfWeek) || !is_numeric($recurrenceDayOfWeek) || $recurrenceDayOfWeek < 1 || $recurrenceDayOfWeek > 7) {
 				http_response_code(400);
-				echo renderError("Invalid day of week for weekly recurrence.");
+				sendSimpleErrorNotificationTrigger("Invalid day of week for weekly recurrence.");
 				exit;
 			}
 			break;
 		case 'm':
 			if (empty($recurrenceDayOfMonth) || !is_numeric($recurrenceDayOfMonth) || $recurrenceDayOfMonth < 1 || $recurrenceDayOfMonth > 31) {
 				http_response_code(400);
-				echo renderError("Invalid day of month for monthly recurrence.");
+				sendSimpleErrorNotificationTrigger("Invalid day of month for monthly recurrence.");
 				exit;
 			}
 			break;
 		case 'y':
 			if (empty($recurrenceMonth) || !is_numeric($recurrenceMonth) || $recurrenceMonth < 1 || $recurrenceMonth > 12) {
 				http_response_code(400);
-				echo renderError("Invalid month for yearly recurrence.");
+				sendSimpleErrorNotificationTrigger("Invalid month for yearly recurrence.");
 				exit;
 			}
 			if (empty($recurrenceDayOfMonth) || !is_numeric($recurrenceDayOfMonth) || $recurrenceDayOfMonth < 1 || $recurrenceDayOfMonth > 31) {
 				http_response_code(400);
-				echo renderError("Invalid day of month for yearly recurrence.");
+				sendSimpleErrorNotificationTrigger("Invalid day of month for yearly recurrence.");
 				exit;
 			}
 			// Verify the month/day combination is valid
 			if (!checkdate($recurrenceMonth, $recurrenceDayOfMonth, date('Y'))) {
 				http_response_code(400);
-				echo renderError("Invalid date: " . $recurrenceDayOfMonth . "/" . $recurrenceMonth . " is not a valid day/month combination.");
+				sendSimpleErrorNotificationTrigger("Invalid date: " . $recurrenceDayOfMonth . "/" . $recurrenceMonth . " is not a valid day/month combination.");
 				exit;
 			}
 			break;
@@ -121,10 +122,17 @@ try {
 
 	$db->exec('COMMIT');
 
-	header('HX-Trigger: taskCreated');
-	echo renderSuccess("Task added successfully!");
+	header('HX-Trigger: ' . json_encode([
+		'taskCreated' => [],
+		'addNotification' => [
+			'type' => 'success',
+			'message' => 'Task added successfully!',
+		]
+	]));
 } catch (Exception $e) {
 	$db->exec('ROLLBACK');
 	http_response_code(500);
-	echo renderError($e->getMessage());
+
+	sendSimpleErrorNotificationTrigger("Failed to add task: " . $e->getMessage());
+	echo $e->getMessage();
 }

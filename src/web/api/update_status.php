@@ -14,7 +14,7 @@ $newStatus = $_POST['new_status'] ?? '';
 
 if (empty($taskId) || empty($newStatus)) {
 	http_response_code(400);
-	echo renderError("Task ID and new status are required.");
+	sendSimpleErrorNotificationTrigger("Task ID and new status are required.");
 	exit;
 }
 
@@ -27,5 +27,11 @@ if (!$result) {
 	throw new Exception("Failed to update task status: " . $db->lastErrorMsg());
 }
 
-header('HX-Trigger: taskStatusUpdated');
-echo renderSuccess("Task status updated successfully.");
+header('HX-Trigger: ' . json_encode([
+	'taskStatusUpdated' => [],
+	'addNotification' => [
+		'type' => 'success',
+		'message' => 'Task status updated successfully!',
+	]
+]));
+

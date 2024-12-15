@@ -74,7 +74,7 @@ $categories = $db->query("SELECT * FROM categories ORDER BY is_default DESC, nam
 			<div class="mb-4">
 				<label for="name" class="block text-sm font-medium text-gray-700">Category Name</label>
 				<input type="text" id="name" name="name" required
-					class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+					class="mt-1 block w-full p-1 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
 			</div>
 
 			<div class="mb-4">

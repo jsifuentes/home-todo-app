@@ -3,6 +3,7 @@ document.addEventListener('alpine:init', () => {
 		refreshTasksTimeout: null,
 		editingTaskId: null,
 		showDropdownTaskId: null,
+		disableCheckboxForTaskId: null,
 		autoRefreshTimeout: null,
 		sortable: null,
 

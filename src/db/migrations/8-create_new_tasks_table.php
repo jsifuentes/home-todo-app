@@ -16,7 +16,7 @@ return function (SQLite3 $db) {
 	)");
 
 	$db->exec("INSERT INTO tasks_temp (id, title, body, sort_order, due_date, status, category_id, linked_to_recurring_id, created_at, updated_at, due_date_increment_selected)
-		SELECT id, title, body, sort_order, due_date, status, category_id, null, created_at, updated_at, due_date_increment_selected FROM tasks");
+		SELECT id, title, body, sort_order, due_date, status, 0, null, created_at, updated_at, due_date_increment_selected FROM tasks");
 
 	$db->exec("DROP TABLE tasks");
 	$db->exec("ALTER TABLE tasks_temp RENAME TO tasks");

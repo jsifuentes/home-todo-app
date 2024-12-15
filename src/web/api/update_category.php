@@ -7,7 +7,7 @@ $isDefault = $_POST['is_default'] ?? false;
 
 if (!$categoryId || !is_numeric($categoryId)) {
 	http_response_code(400);
-	echo renderError('Category ID is required');
+	sendSimpleErrorNotificationTrigger('Category ID is required');
 	exit;
 }
 
@@ -19,7 +19,7 @@ $category = $result->fetchArray(SQLITE3_ASSOC);
 
 if (!$category) {
 	http_response_code(404);
-	echo renderError('Category not found');
+	sendSimpleErrorNotificationTrigger('Category not found');
 	exit;
 }
 
@@ -41,10 +41,16 @@ try {
 
 	$db->exec('COMMIT');
 
-	header('HX-Trigger: categoriesUpdated');
-	echo renderSuccess('Default category updated successfully');
+	header('HX-Trigger: ' . json_encode([
+		'categoriesUpdated' => [],
+		'addNotification' => [
+			'type' => 'success',
+			'message' => 'Category updated successfully!',
+		]
+	]));
 } catch (Exception $e) {
 	$db->exec('ROLLBACK');
 	http_response_code(500);
-	echo renderError($e->getMessage());
+	sendSimpleErrorNotificationTrigger($e->getMessage());
+	echo $e->getMessage();
 }

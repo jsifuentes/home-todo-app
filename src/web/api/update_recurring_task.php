@@ -3,7 +3,7 @@ require_once __DIR__ . '/../../init.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 	http_response_code(405);
-	echo renderError("Invalid request method. Please use POST.");
+	sendSimpleErrorNotificationTrigger("Invalid request method. Please use POST.");
 	exit;
 }
 
@@ -21,7 +21,7 @@ $recurrenceMonth = $_POST['recurrence_month'] ?? null;
 // Validate required fields
 if (!$taskId || !is_numeric($taskId)) {
 	http_response_code(400);
-	echo renderError("Task ID is required.");
+	sendSimpleErrorNotificationTrigger("Task ID is required.");
 	exit;
 }
 
@@ -29,14 +29,14 @@ if (!$taskId || !is_numeric($taskId)) {
 $recurringTask = getRecurringTaskById($db, $taskId);
 if (!$recurringTask) {
 	http_response_code(404);
-	echo renderError("Recurring task not found.");
+	sendSimpleErrorNotificationTrigger("Recurring task not found.");
 	exit;
 }
 
 // Validate title if provided
 if ($title !== null && empty(trim($title))) {
 	http_response_code(400);
-	echo renderError("Title cannot be empty.");
+	sendSimpleErrorNotificationTrigger("Title cannot be empty.");
 	exit;
 }
 
@@ -44,7 +44,7 @@ if ($title !== null && empty(trim($title))) {
 if ($recurrenceAmount !== null) {
 	if (!is_numeric($recurrenceAmount) || $recurrenceAmount < 1) {
 		http_response_code(400);
-		echo renderError("Invalid recurrence amount.");
+		sendSimpleErrorNotificationTrigger("Invalid recurrence amount.");
 		exit;
 	}
 }
@@ -52,7 +52,7 @@ if ($recurrenceAmount !== null) {
 if ($recurrenceUnit !== null) {
 	if (!in_array($recurrenceUnit, ['d', 'w', 'm', 'y'])) {
 		http_response_code(400);
-		echo renderError("Invalid recurrence unit.");
+		sendSimpleErrorNotificationTrigger("Invalid recurrence unit.");
 		exit;
 	}
 
@@ -61,32 +61,32 @@ if ($recurrenceUnit !== null) {
 		case 'w':
 			if (empty($recurrenceDayOfWeek) || !is_numeric($recurrenceDayOfWeek) || $recurrenceDayOfWeek < 1 || $recurrenceDayOfWeek > 7) {
 				http_response_code(400);
-				echo renderError("Invalid day of week for weekly recurrence.");
+				sendSimpleErrorNotificationTrigger("Invalid day of week for weekly recurrence.");
 				exit;
 			}
 			break;
 		case 'm':
 			if (empty($recurrenceDayOfMonth) || !is_numeric($recurrenceDayOfMonth) || $recurrenceDayOfMonth < 1 || $recurrenceDayOfMonth > 31) {
 				http_response_code(400);
-				echo renderError("Invalid day of month for monthly recurrence.");
+				sendSimpleErrorNotificationTrigger("Invalid day of month for monthly recurrence.");
 				exit;
 			}
 			break;
 		case 'y':
 			if (empty($recurrenceMonth) || !is_numeric($recurrenceMonth) || $recurrenceMonth < 1 || $recurrenceMonth > 12) {
 				http_response_code(400);
-				echo renderError("Invalid month for yearly recurrence.");
+				sendSimpleErrorNotificationTrigger("Invalid month for yearly recurrence.");
 				exit;
 			}
 			if (empty($recurrenceDayOfMonth) || !is_numeric($recurrenceDayOfMonth) || $recurrenceDayOfMonth < 1 || $recurrenceDayOfMonth > 31) {
 				http_response_code(400);
-				echo renderError("Invalid day of month for yearly recurrence.");
+				sendSimpleErrorNotificationTrigger("Invalid day of month for yearly recurrence.");
 				exit;
 			}
 			// Verify the month/day combination is valid
 			if (!checkdate($recurrenceMonth, $recurrenceDayOfMonth, date('Y'))) {
 				http_response_code(400);
-				echo renderError("Invalid date: " . $recurrenceDayOfMonth . "/" . $recurrenceMonth . " is not a valid day/month combination.");
+				sendSimpleErrorNotificationTrigger("Invalid date: " . $recurrenceDayOfMonth . "/" . $recurrenceMonth . " is not a valid day/month combination.");
 				exit;
 			}
 			break;
@@ -153,10 +153,16 @@ try {
 
 	$db->exec('COMMIT');
 
-	header('HX-Trigger: recurringTasksUpdated');
-	echo renderSuccess("Recurring task updated successfully!");
+	header('HX-Trigger: ' . json_encode([
+		'recurringTasksUpdated' => [],
+		'addNotification' => [
+			'type' => 'success',
+			'message' => 'Recurring task updated successfully!',
+		]
+	]));
 } catch (Exception $e) {
 	$db->exec('ROLLBACK');
 	http_response_code(500);
-	echo renderError($e->getMessage());
+	sendSimpleErrorNotificationTrigger($e->getMessage());
+	echo $e->getMessage();
 }

@@ -14,7 +14,7 @@ $taskIds = json_decode($_POST['task_ids_in_order'] ?? '[]') ?: [];
 // Validate input
 if (!$taskIds || empty($taskIds)) {
 	http_response_code(412);
-	echo renderError('Invalid task IDs');
+	sendSimpleErrorNotificationTrigger('Invalid task IDs');
 	exit;
 }
 
@@ -28,5 +28,10 @@ foreach ($taskIds as $index => $taskId) {
 }
 
 
-header('HX-Trigger: tasksUpdated');
-echo renderSuccess('Sort order updated successfully');
+header('HX-Trigger: ' . json_encode([
+	'tasksUpdated' => [],
+	'addNotification' => [
+		'type' => 'success',
+		'message' => 'Sort order updated successfully',
+	]
+]));

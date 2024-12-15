@@ -3,14 +3,14 @@ require_once '../../init.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
 	http_response_code(405);
-	die(renderError("Invalid request method. Please use DELETE."));
+	die(sendSimpleErrorNotificationTrigger("Invalid request method. Please use DELETE."));
 }
 
 $taskId = $_GET['taskId'] ?? null;
 
 if (!$taskId || !is_numeric($taskId)) {
 	http_response_code(400);
-	die(renderError("Invalid task ID."));
+	die(sendSimpleErrorNotificationTrigger("Invalid task ID."));
 }
 
 $db->exec('BEGIN');
@@ -25,10 +25,17 @@ try {
 
 	$db->exec('COMMIT');
 
-	header('HX-Trigger: recurringTasksUpdated');
+	header('HX-Trigger: ' . json_encode([
+		'recurringTasksUpdated' => [],
+		'addNotification' => [
+			'type' => 'success',
+			'message' => 'Recurring task deleted successfully!',
+		]
+	]));
 	echo renderSuccess("Recurring task deleted successfully!");
 } catch (Exception $e) {
 	$db->exec('ROLLBACK');
 	http_response_code(500);
-	echo renderError($e->getMessage());
+	sendSimpleErrorNotificationTrigger($e->getMessage());
+	echo $e->getMessage();
 }

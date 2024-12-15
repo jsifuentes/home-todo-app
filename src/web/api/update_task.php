@@ -23,21 +23,21 @@ $addTimeToDueDate = $_POST['add_to_due_date'] ?? null;
 // Validate input
 if (!$taskId || !is_numeric($taskId)) {
 	http_response_code(412);
-	echo renderError('Invalid task ID');
+	sendSimpleErrorNotificationTrigger('Invalid task ID');
 	exit;
 }
 
 // Check if sortOrder is set and is numeric
 if ($sortOrder !== null && !is_numeric($sortOrder)) {
 	http_response_code(400);
-	echo renderError('Invalid new index');
+	sendSimpleErrorNotificationTrigger('Invalid new index');
 	exit;
 }
 
 // Check if title is not empty if set
 if ($title !== null && empty($title)) {
 	http_response_code(400);
-	echo renderError('Title cannot be empty');
+	sendSimpleErrorNotificationTrigger('Title cannot be empty');
 	exit;
 }
 
@@ -48,7 +48,7 @@ $result = $stmt->execute();
 $taskRow = $result->fetchArray(SQLITE3_ASSOC);
 if (!$taskRow) {
 	http_response_code(400);
-	echo renderError('Task not found');
+	sendSimpleErrorNotificationTrigger('Task not found');
 	exit;
 }
 
@@ -61,7 +61,7 @@ if ($shouldUpdateCategory) {
 		$result = $stmt->execute();
 		if (!$result) {
 			http_response_code(400);
-			echo renderError('Invalid category ID');
+			sendSimpleErrorNotificationTrigger('Invalid category ID');
 			exit;
 		}
 	} else {
@@ -113,5 +113,10 @@ if (!$result) {
 	throw new Exception("Failed to update task: " . $db->lastErrorMsg());
 }
 
-header('HX-Trigger: tasksUpdated');
-echo renderSuccess('Task updated successfully');
+header('HX-Trigger: ' . json_encode([
+	'taskUpdated' => [],
+	'addNotification' => [
+		'type' => 'success',
+		'message' => 'Task updated successfully',
+	]
+]));

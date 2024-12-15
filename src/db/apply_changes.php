@@ -23,6 +23,13 @@ if (!file_exists(DB_PATH)) {
 			updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 		)",
 
+		'categories' => "CREATE TABLE IF NOT EXISTS categories (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			name TEXT NOT NULL,
+			is_default BOOLEAN DEFAULT 0,
+			created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		)",
+
 		"settings" => "CREATE TABLE IF NOT EXISTS settings (
 			key TEXT PRIMARY KEY,
 			value TEXT

@@ -6,14 +6,14 @@ $value = $_POST['value'] ?? null;
 
 if (!$key || $value === null) {
 	http_response_code(400);
-	echo renderError('Key and value are required');
+	sendSimpleErrorNotificationTrigger('Key and value are required');
 	exit;
 }
 
 // Is this a real key?
 if (!isset($settingsConfig[$key])) {
 	http_response_code(400);
-	echo renderError('Invalid key');
+	sendSimpleErrorNotificationTrigger('Invalid key');
 	exit;
 }
 
@@ -24,7 +24,7 @@ if (isset($settingsConfig[$key]['validator'])) {
 		$settingsConfig[$key]['validator']($value);
 	} catch (ValidatorException $e) {
 		http_response_code(400);
-		echo renderError(sprintf('Bad setting value for %s: %s', $settingsConfig[$key]['label'], $e->getMessage()));
+		sendSimpleErrorNotificationTrigger(sprintf('Bad setting value for %s: %s', $settingsConfig[$key]['label'], $e->getMessage()));
 		exit;
 	}
 }
@@ -34,9 +34,14 @@ $stmt->bindValue(1, $key, SQLITE3_TEXT);
 $stmt->bindValue(2, $value, SQLITE3_TEXT);
 if (!$stmt->execute()) {
 	http_response_code(500);
-	echo renderError('Failed to update setting: ' . $db->lastErrorMsg());
+	sendSimpleErrorNotificationTrigger('Failed to update setting: ' . $db->lastErrorMsg());
 	exit;
 }
 
-header('HX-Trigger: settingsUpdated');
-echo renderSuccess('Setting updated');
+header('HX-Trigger: ' . json_encode([
+	'settingsUpdated' => [],
+	'addNotification' => [
+		'type' => 'success',
+		'message' => 'Setting updated',
+	]
+]));

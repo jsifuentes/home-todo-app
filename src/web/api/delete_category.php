@@ -4,7 +4,7 @@ require_once '../components/error.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
 	http_response_code(405);
-	echo renderError("Invalid request method. Please use DELETE.");
+	echo "Invalid request method. Please use DELETE.";
 	exit;
 }
 
@@ -12,7 +12,7 @@ $categoryId = $_REQUEST['categoryId'] ?? '';
 
 if (empty($categoryId) || !is_numeric($categoryId)) {
 	http_response_code(400);
-	echo renderError("Invalid category ID.");
+	echo "Invalid category ID.";
 	exit;
 }
 
@@ -24,7 +24,7 @@ $category = $result->fetchArray(SQLITE3_ASSOC);
 
 if ($category && $category['is_default']) {
 	http_response_code(400);
-	echo renderError("Cannot delete the default category.");
+	echo "Cannot delete the default category.";
 	exit;
 }
 
@@ -48,10 +48,16 @@ try {
 
 	$db->exec('COMMIT');
 
-	header('HX-Trigger: categoriesUpdated');
-	echo renderSuccess("Category deleted successfully.");
+	header('HX-Trigger: ' . json_encode([
+		'categoriesUpdated' => [],
+		'addNotification' => [
+			'type' => 'success',
+			'message' => 'Category deleted successfully!',
+		]
+	]));
 } catch (Exception $e) {
 	$db->exec('ROLLBACK');
 	http_response_code(500);
-	echo renderError($e->getMessage());
+	sendSimpleErrorNotificationTrigger("Failed to delete category: " . $e->getMessage());
+	echo $e->getMessage();
 }

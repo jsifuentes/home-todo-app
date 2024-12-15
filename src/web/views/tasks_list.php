@@ -115,22 +115,19 @@ $taskLists = getTasks($categoryId);
 				$isDueWithinTwoDays = isDueWithinDays($task['due_date'], 2);
 				?>
 
-				<li class="list-group-item mb-2 rounded shadow flex flex-col <?= $task['status'] === TASK_STATUS_DONE ? 'done bg-gray-200' : 'bg-white' ?> <?= !$isDone && $isPastDue ? 'border-2 border-red-400' : '' ?>"
-					data-id="<?= $task['id'] ?>">
-
+				<li data-id="<?= $task['id'] ?>" class="list-group-item mb-2 rounded shadow flex flex-col <?= $task['status'] === TASK_STATUS_DONE ? 'done bg-gray-200' : 'bg-white' ?> <?= !$isDone && $isPastDue ? 'border-2 border-red-400' : '' ?>">
 					<form class="edit-task-form" hx-post="/api/update_task.php" hx-disinherit="*">
 						<input type="hidden" name="task_id" value="<?= $task['id'] ?>">
 						<div class="flex w-full items-stretch p-2">
-							<div class="flex items-center w-full items-stretch cursor-pointer"
-								@click="showDropdownTaskId = showDropdownTaskId === <?= $task['id'] ?> ? null : <?= $task['id'] ?>">
+							<div class="flex items-center w-full items-stretch cursor-pointer">
 								<div class="status-checkbox mx-auto flex items-center">
 									<input type="checkbox" class="mr-3 h-5 w-5"
 										<?php if ($isDone): ?>checked<?php endif; ?>
 										hx-post="/api/update_status.php"
-										hx-vals='{"task_id": "<?= $task['id'] ?>", "new_status": "<?= $isDone ? 'todo' : 'done' ?>"}'
-										hx-target="closest form">
+										hx-vals='js:{"task_id": "<?= $task['id'] ?>", "new_status": event.target.checked ? "done" : "todo"}'>
 								</div>
-								<div <?php if ($isDone): ?>:class="{ 'line-through': !editingTaskId }" <?php endif; ?> class="w-full">
+								<div <?php if ($isDone): ?>:class="{ 'line-through': !editingTaskId }" <?php endif; ?> class="w-full"
+									@click="showDropdownTaskId = showDropdownTaskId === <?= $task['id'] ?> ? null : <?= $task['id'] ?>">
 									<div x-show="editingTaskId !== <?= $task['id'] ?>">
 										<h3><?= htmlspecialchars($task['title']) ?></h3>
 										<p class="text-sm text-gray-500"><?= htmlspecialchars($task['body']) ?></p>

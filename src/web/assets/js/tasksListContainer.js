@@ -14,6 +14,7 @@ document.addEventListener('alpine:init', () => {
 		newTaskDueDateRangeChoice: null,
 		newTaskRecurringToggle: false,
 		newTaskRecurrenceUnit: 'd',
+		newTaskRecurrenceDayOfMonth: null,
 		clearSuccessMessageTimeout: null,
 		addTaskFormResult: null,
 
@@ -40,7 +41,6 @@ document.addEventListener('alpine:init', () => {
 			// and hide the form
 			document.body.addEventListener('taskCreated', () => {
 				this.$dispatch('refreshTasks');
-				this.formVisible = false;
 
 				// wait 1 second before removing the success message
 				if (this.clearSuccessMessageTimeout) {
