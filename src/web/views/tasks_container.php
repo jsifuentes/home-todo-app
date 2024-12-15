@@ -18,14 +18,19 @@ $defaultCategoryId = $defaultCategoryIndex !== false ? $categories[$defaultCateg
 	<?php if (!$tvMode): ?>
 		<div class="mx-auto">
 			<div class="text-center">
-				<button @click="formVisible = !formVisible"
+				<button x-show="!formVisible"
 					hx-get="/views/add_task_form.php"
 					hx-trigger="click"
 					hx-target="#add-task-form"
 					hx-indicator=".loading"
-					:class="formVisible ? 'bg-gray-300 hover:bg-gray-200 text-gray-600' : 'bg-blue-700 hover:bg-blue-400 text-white'"
-					class="bg-blue-500 hover:bg-blue-700 text-white font-bold mt-2 py-2 px-4 rounded lg:w-[200px]"
-					x-text="formVisible ? 'Close' : 'Add Task'">
+					@click="formVisible = true"
+					class="bg-blue-500 hover:bg-blue-700 text-white font-bold mt-2 py-2 px-4 rounded lg:w-[200px]">
+					Add Task
+				</button>
+				<button x-show="formVisible"
+					@click="formVisible = false"
+					class="bg-gray-300 hover:bg-gray-200 text-gray-600 font-bold mt-2 py-2 px-4 rounded lg:w-[200px]">
+					Close
 				</button>
 			</div>
 

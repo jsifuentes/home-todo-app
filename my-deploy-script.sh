@@ -8,7 +8,7 @@ fi
 DEPLOY_PATH="~/Documents/homelab/todo"
 
 ssh-add ~/.ssh/id_*
-ssh -A user@todo.lab.sifuen.com "cd $DEPLOY_PATH && git pull && docker compose stop todo && docker compose up --build -d todo"
+ssh -A user@todo.lab.sifuen.com "cd $DEPLOY_PATH && git fetch && git reset --hard origin/main && docker compose stop todo && docker compose up --build -d todo"
 
 # check if the cronjob already exists using cron -l and grep
 echo "# Checking if the cronjob already exists"
