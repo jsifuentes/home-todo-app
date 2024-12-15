@@ -5,10 +5,10 @@
                 'bg-green-100 text-green-800': notification.type === 'success',
                 'bg-red-100 text-red-800': notification.type === 'error',
             }">
-            <span class="flex-grow" x-text="notification.message"></span>
+            <span class="flex-grow pr-3" x-text="notification.message"></span>
             <button @click="removeNotification(notification.id)" :class="{
-                'text-green-800': notification.type === 'success',
-                'text-red-800': notification.type === 'error',
+                'text-green-800 hover:text-red-800': notification.type === 'success',
+                'text-red-800 hover:text-green-800': notification.type === 'error',
             }">
                 &times;
             </button>
