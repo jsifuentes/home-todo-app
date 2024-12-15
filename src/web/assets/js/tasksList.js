@@ -62,6 +62,7 @@ document.addEventListener('alpine:init', () => {
 
 				this.refreshTasksTimeout = setTimeout(() => {
 					document.body.dispatchEvent(new Event('refreshTasks'));
+					clearTimeout(this.refreshTasksTimeout);
 				}, 1000);
 			};
 
@@ -86,6 +87,7 @@ document.addEventListener('alpine:init', () => {
 			if (minHours === undefined) {
 				minHours = 0;
 			}
+
 			return dueUnixtime - (now.getTime() / 1000) <= maxHours * 60 * 60 && dueUnixtime - (now.getTime() / 1000) >= minHours * 60 * 60;
 		},
 	}));
