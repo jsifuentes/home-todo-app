@@ -49,6 +49,15 @@ function getTasks($categoryId = null): array
 	// Sort them so all the tasks that are due within the next 24 hours are at the top.
 	// Do not sort any other tasks.
 	usort($tasks, function ($a, $b) {
+		if ($a['status'] === 'done' && $b['status'] === 'done') {
+			return strtotime($b['updated_at']) - strtotime($a['updated_at']);
+		}
+
+		// if the task is done, push it down.
+		if ($a['status'] === 'done') {
+			return 1;
+		}
+
 		// Get current timestamp
 		$now = time();
 
