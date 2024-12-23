@@ -47,11 +47,7 @@ document.addEventListener('alpine:init', () => {
 				}
 			});
 
-			this.autoRefreshTimeout = setInterval(() => {
-				if (this.autoRefreshEnabled && !this.editingTaskId && !this.showDropdownTaskId) {
-					this.$dispatch('refreshTasks');
-				}
-			}, 5000);
+			this.autoRefreshTimeout = setInterval(this.tryRefreshTasks.bind(this), 500);
 
 			this.onTaskStatusUpdated = () => {
 				console.log('Status updated successfully');
@@ -74,10 +70,17 @@ document.addEventListener('alpine:init', () => {
 			}
 		},
 
+		tryRefreshTasks() {
+			if (this.autoRefreshEnabled && !this.editingTaskId && !this.showDropdownTaskId) {
+				this.$dispatch('refreshTasks');
+			}
+		},
+
 		destroy() {
 			console.log('Destroying tasksList');
 			if (this.autoRefreshTimeout) {
 				clearInterval(this.autoRefreshTimeout);
+				delete this.autoRefreshTimeout;
 			}
 
 			if (this.sortable) {

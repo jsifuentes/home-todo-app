@@ -124,7 +124,9 @@ $taskLists = getTasks($categoryId);
 				$isDueWithinTwoDays = isDueWithinDays($task['due_date'], 2);
 				?>
 
-				<li data-id="<?= $task['id'] ?>" class="list-group-item mb-2 rounded shadow flex flex-col <?= $task['status'] === TASK_STATUS_DONE ? 'done bg-gray-200' : 'bg-white' ?> <?= !$isDone && $isPastDue ? 'border-2 border-red-400' : '' ?>">
+				<li
+					data-id="<?= $task['id'] ?>"
+					class="list-group-item mb-2 rounded shadow flex flex-col <?= $task['status'] === TASK_STATUS_DONE ? 'done bg-gray-200' : 'bg-white' ?> <?= !$isDone && $isPastDue ? 'border-2 border-red-400' : '' ?>">
 					<form class="edit-task-form"
 						hx-post="/api/update_task.php"
 						hx-disinherit="*"
@@ -141,9 +143,13 @@ $taskLists = getTasks($categoryId);
 										hx-swap="none"
 									>
 								</div>
-								<div <?php if ($isDone): ?>:class="{ 'line-through': !editingTaskId }" <?php endif; ?> class="w-full"
-									@click="showDropdownTaskId = showDropdownTaskId === <?= $task['id'] ?> ? null : <?= $task['id'] ?>">
-									<div x-show="editingTaskId !== <?= $task['id'] ?>">
+								<div
+									<?php if ($isDone): ?>:class="{ 'line-through': !editingTaskId }" <?php endif; ?> class="w-full"
+									@click="showDropdownTaskId = showDropdownTaskId === <?= $task['id'] ?> ? null : <?= $task['id'] ?>"
+								>
+									<div
+										x-show="editingTaskId !== <?= $task['id'] ?>"
+									>
 										<h3><?= htmlspecialchars($task['title']) ?></h3>
 										<p class="text-sm text-gray-500"><?= htmlspecialchars($task['body']) ?></p>
 										<div class="flex text-xs text-gray-500 items-center">
@@ -177,12 +183,15 @@ $taskLists = getTasks($categoryId);
 										</div>
 									</div>
 
-									<div x-show="editingTaskId === <?= $task['id'] ?>">
+									<div
+										x-show="editingTaskId === <?= $task['id'] ?>"
+									>
 										<input type="text" name="title" class="w-full border rounded p-1 mb-1"
 											value="<?= htmlspecialchars($task['title']) ?>"
 											@keydown.enter="$event.target.form.submit()"
 											@keydown.escape="editingTaskId = null"
-											x-ref="titleInput">
+											x-ref="titleInput"
+										>
 										<textarea name="body" class="w-full border rounded p-1"
 											rows="2"><?= htmlspecialchars($task['body']) ?></textarea>
 										<select name="category_id" class="w-full border rounded py-2 px-1">
@@ -216,9 +225,12 @@ $taskLists = getTasks($categoryId);
 							</div>
 						</div>
 
-						<div class="flex w-full items-stretch border-t border-gray-200 pt-2" x-show="editingTaskId === <?= $task['id'] ?> || showDropdownTaskId === <?= $task['id'] ?>">
+						<div class="flex w-full items-stretch border-t border-gray-200 pt-2"
+							x-show="editingTaskId === <?= $task['id'] ?> || showDropdownTaskId === <?= $task['id'] ?>"
+						>
 							<div class="flex w-full justify-between px-[16px] items-stretch flex-grow">
-								<button x-show="editingTaskId !== <?= $task['id'] ?>"
+								<button
+									x-show="editingTaskId !== <?= $task['id'] ?>"
 									type="button"
 									class="px-3 py-1 w-full text-sm text-gray-400 text-center"
 									hx-post="/api/update_task.php"
@@ -232,7 +244,8 @@ $taskLists = getTasks($categoryId);
 									</div>
 									<span>Add one more day</span>
 								</button>
-								<button x-show="editingTaskId !== <?= $task['id'] ?>"
+								<button
+									x-show="editingTaskId !== <?= $task['id'] ?>"
 									type="button"
 									class="px-3 py-1 w-full text-sm text-gray-400 text-center"
 									@click="editingTaskId = <?= $task['id'] ?>"
@@ -260,7 +273,8 @@ $taskLists = getTasks($categoryId);
 									<span>Delete</span>
 								</button>
 
-								<button x-show="editingTaskId === <?= $task['id'] ?>"
+								<button
+									x-show="editingTaskId === <?= $task['id'] ?>"
 									type="submit"
 									class="px-3 py-1 w-full text-sm text-gray-400 text-center"
 								>
@@ -272,10 +286,12 @@ $taskLists = getTasks($categoryId);
 									<span>Save</span>
 								</button>
 
-								<button x-show="editingTaskId === <?= $task['id'] ?>"
+								<button
+									x-show="editingTaskId === <?= $task['id'] ?>"
 									type="button"
 									class="px-3 py-1 w-full text-sm text-gray-400 text-center"
-									@click="editingTaskId = null; showDropdownTaskId = null">
+									@click="editingTaskId = null; showDropdownTaskId = null"
+								>
 									<div>
 										<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 m-auto">
 											<path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
