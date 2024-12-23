@@ -1,6 +1,7 @@
 document.addEventListener('alpine:init', () => {
 	Alpine.data('tasksList', () => ({
 		refreshTasksTimeout: null,
+		refreshTasksTimeoutFunction: null,
 		editingTaskId: null,
 		showDropdownTaskId: null,
 		disableCheckboxForTaskId: null,
@@ -28,7 +29,8 @@ document.addEventListener('alpine:init', () => {
 								'Content-Type': 'application/x-www-form-urlencoded',
 							},
 							body: new URLSearchParams(formData).toString(),
-						})
+						}
+					)
 						.then(() => {
 							document.body.dispatchEvent(new Event('refreshTasks'));
 						})
@@ -56,10 +58,13 @@ document.addEventListener('alpine:init', () => {
 					clearTimeout(this.refreshTasksTimeout);
 				}
 
-				this.refreshTasksTimeout = setTimeout(() => {
+				this.refreshTasksTimeoutFunction = () => {
 					document.body.dispatchEvent(new Event('refreshTasks'));
 					clearTimeout(this.refreshTasksTimeout);
-				}, 1000);
+					delete this.refreshTasksTimeoutFunction;
+				};
+
+				this.refreshTasksTimeout = setTimeout(this.refreshTasksTimeoutFunction, 1000);
 			};
 
 			document.body.addEventListener('taskStatusUpdated', this.onTaskStatusUpdated);
@@ -80,7 +85,6 @@ document.addEventListener('alpine:init', () => {
 			console.log('Destroying tasksList');
 			if (this.autoRefreshTimeout) {
 				clearInterval(this.autoRefreshTimeout);
-				delete this.autoRefreshTimeout;
 			}
 
 			if (this.sortable) {

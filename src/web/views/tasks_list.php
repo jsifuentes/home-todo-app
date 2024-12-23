@@ -144,7 +144,8 @@ $taskLists = getTasks($categoryId);
 									>
 								</div>
 								<div
-									<?php if ($isDone): ?>:class="{ 'line-through': !editingTaskId }" <?php endif; ?> class="w-full"
+									<?php if ($isDone): ?>:class="{ 'line-through': !editingTaskId }" <?php endif; ?>
+									class="w-full"
 									@click="showDropdownTaskId = showDropdownTaskId === <?= $task['id'] ?> ? null : <?= $task['id'] ?>"
 								>
 									<div
@@ -231,8 +232,7 @@ $taskLists = getTasks($categoryId);
 							<div class="flex w-full justify-between px-[16px] items-stretch flex-grow">
 								<button
 									x-show="editingTaskId !== <?= $task['id'] ?>"
-									type="button"
-									class="px-3 py-1 w-full text-sm text-gray-400 text-center"
+									type="button" class="p x-3 py-1 w-full text-sm text-gray-400 text-center"
 									hx-post="/api/update_task.php"
 									hx-vals='{"task_id": "<?= $task['id'] ?>", "add_to_due_date": "1d"}'
 									hx-swap="none"
@@ -246,8 +246,7 @@ $taskLists = getTasks($categoryId);
 								</button>
 								<button
 									x-show="editingTaskId !== <?= $task['id'] ?>"
-									type="button"
-									class="px-3 py-1 w-full text-sm text-gray-400 text-center"
+									type="button" class="px-3 py-1 w-full text-sm text-gray-400 text-center"
 									@click="editingTaskId = <?= $task['id'] ?>"
 								>
 									<div>
@@ -259,8 +258,7 @@ $taskLists = getTasks($categoryId);
 								</button>
 								<button
 									x-show="editingTaskId !== <?= $task['id'] ?>"
-									type="button"
-									class="px-3 py-1 w-full text-sm text-gray-400 text-center"
+									type="button" class="px-3 py-1 w-full text-sm text-gray-400 text-center"
 									hx-delete="/api/delete_task.php?task_id=<?= $task['id'] ?>"
 									hx-confirm="Are you sure you want to delete this task?"
 									hx-swap="none"
