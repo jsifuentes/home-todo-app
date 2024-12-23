@@ -47,7 +47,7 @@ document.addEventListener('alpine:init', () => {
 				}
 			});
 
-			this.autoRefreshTimeout = setInterval(this.tryRefreshTasks.bind(this), 500);
+			this.autoRefreshTimeout = setInterval(this.tryRefreshTasks.bind(this), 5000);
 
 			this.onTaskStatusUpdated = () => {
 				console.log('Status updated successfully');
