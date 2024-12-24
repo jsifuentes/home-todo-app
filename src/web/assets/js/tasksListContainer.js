@@ -2,6 +2,7 @@ document.addEventListener('alpine:init', () => {
 	Alpine.data('tasksListContainer', (dueDatesConfig, priorityLevelsConfig, defaultCategoryId) => ({
 		formVisible: false,
 		filteredCategory: null,
+		showAll: false,
 		refreshTasksTimeout: null,
 		autoRefreshEnabled: true,
 
@@ -31,7 +32,10 @@ document.addEventListener('alpine:init', () => {
 
 			this.$watch('filteredCategory', (newVal) => {
 				this.newTaskCategory = newVal;
+				this.$dispatch('refreshTasks');
+			});
 
+			this.$watch('showAll', () => {
 				this.$dispatch('refreshTasks');
 			});
 

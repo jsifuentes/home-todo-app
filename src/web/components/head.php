@@ -9,11 +9,17 @@ require_once __DIR__ . '/../../init.php';
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="htmx-config" content='{"responseHandling": [{"code":".*", "swap": true}]}' />
 	<title>Todos</title>
-	<script src="https://unpkg.com/htmx.org@2.0.3/dist/htmx.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/@alpinejs/focus@3.x.x/dist/cdn.js"></script>
-	<script src="https://unpkg.com/alpinejs@3.14.7/dist/cdn.js" defer></script>
 	<script src="https://cdn.tailwindcss.com"></script>
-	<script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/alpine-morph.js"></script>
+	
+	<script src="https://unpkg.com/htmx.org@latest"></script>
+	<script src="https://unpkg.com/htmx.org@latest/dist/ext/alpine-morph.js"></script>
+	<!-- Alpine Plugins -->
+	<script defer src="https://unpkg.com/@alpinejs/morph@3.x.x/dist/cdn.min.js"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/focus@3.x.x/dist/cdn.js"></script>
+	<!-- Alpine Core -->
+	<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+
 	<script src="/assets/js/Sortable.js"></script>
 	<script src="/assets/js/tasksListContainer.js"></script>
 	<script src="/assets/js/tasksList.js"></script>

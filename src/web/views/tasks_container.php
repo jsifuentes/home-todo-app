@@ -62,14 +62,27 @@ $defaultCategoryId = $defaultCategoryIndex !== false ? $categories[$defaultCateg
 		<?php endforeach; ?>
 	</div>
 
-	<div id="tasks-list" hx-get="/views/tasks_list.php" :hx-vars="filteredCategory ? 'category_id:' + filteredCategory : ''" hx-trigger="load, refreshTasks from:body">
+	<div id="tasks-list-loader"
+		hx-ext="alpine-morph"
+		hx-target="#tasks-list"
+		hx-swap="morph"
+		hx-get="/views/tasks_list.php"
+		:hx-vars="(filteredCategory ? 'category_id:' + filteredCategory + ',' : '') + 'show_all:' + showAll"
+		hx-trigger="load, refreshTasks from:body"
+	>
 	</div>
 
+	<div id="tasks-list"></div>
+
 	<?php if (!$tvMode): ?>
-		<div class="text-center">
+		<div class="text-center flex flex-col items-center">
+			<label class="inline-flex items-center mt-4">
+				<input type="checkbox" class="form-checkbox" x-model="showAll">
+				<span class="ml-2 text-xs">Show All Done</span>
+			</label>
 			<button type="button"
 				@click="autoRefreshEnabled = !autoRefreshEnabled"
-				class="text-xs mt-4 px-4 py-2 rounded transition-colors duration-200"
+				class="text-xs px-4 py-2 rounded transition-colors duration-200"
 				:class="autoRefreshEnabled ? 'bg-gray-100 hover:bg-gray-200 text-gray-600' : 'bg-blue-400 hover:bg-blue-400 text-white'">
 				<span x-text="autoRefreshEnabled ? 'Disable' : 'Enable'"></span> Auto-Refresh
 			</button>
