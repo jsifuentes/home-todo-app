@@ -136,7 +136,8 @@ $taskLists = getTasks($categoryId, $showAll);
 					?>
 
 					<li
-						data-id="<?= $task['id'] ?>"
+						data-id="<?= $task['id'] /* for sortable */ ?>"
+						key="<?= $task['id'] /* for alpine morph diffing */ ?>"
 						class="list-group-item mb-2 rounded shadow flex flex-col <?= $task['status'] === TASK_STATUS_DONE ? 'done bg-gray-200' : 'bg-white' ?> <?= !$isDone && $isPastDue ? 'border-2 border-red-400' : '' ?>">
 						<form class="edit-task-form"
 							hx-post="/api/update_task.php"
