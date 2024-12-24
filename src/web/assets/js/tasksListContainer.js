@@ -16,8 +16,6 @@ document.addEventListener('alpine:init', () => {
 		newTaskRecurringToggle: false,
 		newTaskRecurrenceUnit: 'd',
 		newTaskRecurrenceDayOfMonth: null,
-		clearSuccessMessageTimeout: null,
-		addTaskFormResult: null,
 
 		keepOpenTaskId: null,
 
@@ -54,14 +52,7 @@ document.addEventListener('alpine:init', () => {
 			document.body.addEventListener('taskCreated', () => {
 				this.$dispatch('refreshTasks');
 
-				// wait 1 second before removing the success message
-				if (this.clearSuccessMessageTimeout) {
-					clearTimeout(this.clearSuccessMessageTimeout);
-				}
-
-				this.clearSuccessMessageTimeout = setTimeout(() => {
-					document.getElementById('add-task-form-result').innerHTML = '';
-				}, 2000);
+				this.$refs.taskTitle.value = '';
 			});
 
 			document.body.addEventListener('tasksUpdated', (evt) => {

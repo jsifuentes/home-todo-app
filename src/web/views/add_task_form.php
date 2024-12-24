@@ -8,9 +8,7 @@ $defaultCategoryIndex = array_search(true, array_column($categories, 'is_default
 $defaultCategoryId = $defaultCategoryIndex !== false ? $categories[$defaultCategoryIndex]['id'] : null;
 ?>
 
-<form hx-post="/api/add_task.php" hx-swap="innerHTML" hx-target="#add-task-form-result">
-    <div id="add-task-form-result" x-ref="addTaskFormResult"></div>
-
+<form hx-post="/api/add_task.php" hx-swap="none">
     <div class="mb-2">
         <input type="text" name="title"
             :placeholder="randomTaskTitle() + '...'"
