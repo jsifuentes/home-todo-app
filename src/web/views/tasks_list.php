@@ -60,6 +60,10 @@ function getTasks($categoryId = null, $showAll = false): array
 			return 1;
 		}
 
+		if ($b['status'] === 'done') {
+			return -1;
+		}
+
 		// Get current timestamp
 		$now = time();
 
@@ -72,7 +76,7 @@ function getTasks($categoryId = null, $showAll = false): array
 			return 0;
 		}
 
-		// If the  task is past due, it should be at the top
+		// If the task is past due, it should be at the top
 		if ($aDueTimestamp < $now) {
 			return -1;
 		}
@@ -166,6 +170,7 @@ $taskLists = getTasks($categoryId, $showAll);
 											<h3><?= htmlspecialchars($task['title']) ?></h3>
 											<p class="text-sm text-gray-500"><?= htmlspecialchars($task['body']) ?></p>
 											<div class="flex text-xs text-gray-500 items-center">
+												<!-- <span class="font-bold mr-1"><?= $task['id']; ?></span> -->
 												<?php if ($task['due_date'] && $task['status'] !== TASK_STATUS_DONE): ?>
 													<p class="flex items-center rounded bg-gray-200 px-1 mr-1"
 														:class="{
