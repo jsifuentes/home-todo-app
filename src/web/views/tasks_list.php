@@ -201,7 +201,6 @@ $taskLists = getTasks($categoryId, $showAll);
 										>
 											<input type="text" name="title" class="w-full border rounded p-1 mb-1"
 												value="<?= htmlspecialchars($task['title']) ?>"
-												@keydown.enter="$event.target.form.submit()"
 												@keydown.escape="editingTaskId = null"
 												x-ref="titleInput"
 											>

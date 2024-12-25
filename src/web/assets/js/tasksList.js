@@ -69,6 +69,14 @@ document.addEventListener('alpine:init', () => {
 
 			document.body.addEventListener('taskStatusUpdated', this.onTaskStatusUpdated);
 
+			this.onTaskUpdated = (evt) => {
+				if (evt.detail.taskId === this.editingTaskId.toString()) {
+					this.editingTaskId = null;
+				}
+			};
+
+			document.body.addEventListener('tasksUpdated', this.onTaskUpdated);
+
 			if (this.keepOpenTaskId) {
 				this.showDropdownTaskId = parseInt(this.keepOpenTaskId);
 				this.keepOpenTaskId = null;
@@ -92,6 +100,7 @@ document.addEventListener('alpine:init', () => {
 			}
 
 			document.body.removeEventListener('taskStatusUpdated', this.onTaskStatusUpdated);
+			document.body.removeEventListener('tasksUpdated', this.onTaskUpdated);
 		},
 
 		dueWithinHours: (dueUnixtime, maxHours, minHours) => {
