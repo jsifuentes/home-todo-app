@@ -158,80 +158,8 @@ function createTaskFromRecurringTask(SQLite3 $db, RecurringTask $recurringTask):
 	$task->categoryId = $recurringTask->categoryId;
 	$task->linkedToRecurringId = $recurringTask->id;
 
-	// Calculate the due date based on recurrence settings
-	$dueDate = new DateTime();
-
-	switch ($recurringTask->recurrenceUnit) {
-		case 'w':
-			// Set to next occurrence of specified weekday
-			$currentDayOfWeek = (int)$dueDate->format('N');
-			$targetDayOfWeek = $recurringTask->recurrenceDayOfWeek;
-			$daysToAdd = ($targetDayOfWeek - $currentDayOfWeek + 7) % 7;
-			if ($daysToAdd === 0) {
-				$daysToAdd = 7; // If today is the target day, set for next week
-			}
-			$dueDate->modify("+{$daysToAdd} days");
-			break;
-
-		case 'm':
-			// Set to specified day of current/next month
-			$targetDay = $recurringTask->recurrenceDayOfMonth;
-			$dueDate->setDate(
-				(int)$dueDate->format('Y'),
-				(int)$dueDate->format('m'),
-				$targetDay
-			);
-			// If the date has already passed this month, move to next month
-			if ($dueDate <= new DateTime()) {
-				$dueDate->modify('first day of next month');
-				$dueDate->setDate(
-					(int)$dueDate->format('Y'),
-					(int)$dueDate->format('m'),
-					$targetDay
-				);
-			}
-			break;
-
-		case 'y':
-			// Set to specified month and day
-			$targetMonth = $recurringTask->recurrenceMonth;
-			$targetDay = $recurringTask->recurrenceDayOfMonth;
-			$dueDate->setDate(
-				(int)$dueDate->format('Y'),
-				$targetMonth,
-				$targetDay
-			);
-			// If the date has already passed this year, move to next year
-			if ($dueDate <= new DateTime()) {
-				$dueDate->modify('+1 year');
-			}
-			break;
-
-		case 'd':
-			// For daily tasks, just set to tomorrow if not specified otherwise
-			$dueDate->modify('+1 day');
-			break;
-	}
-
-	// Multiply by recurrence amount
-	if ($recurringTask->recurrenceAmount > 1) {
-		$interval = "+" . ($recurringTask->recurrenceAmount - 1);
-		switch ($recurringTask->recurrenceUnit) {
-			case 'd':
-				$dueDate->modify("$interval days");
-				break;
-			case 'w':
-				$dueDate->modify("$interval weeks");
-				break;
-			case 'm':
-				$dueDate->modify("$interval months");
-				break;
-			case 'y':
-				$dueDate->modify("$interval years");
-				break;
-		}
-	}
-
+	// Calculate the due date based on the recurring task due date increment
+	$dueDate = calculateEndDate($recurringTask->dueDateIncrementSelected);
 	$task->dueDate = $dueDate->format('Y-m-d H:i:s');
 
 	// Create the task and update the last generated timestamp

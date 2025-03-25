@@ -68,7 +68,7 @@ function getFutureTimeString(DateTime $tested, DateTime $against)
 	return $tested->format('F Y');
 }
 
-function calculateEndDate(string $incrementer, DateTime $start = null): DateTime
+function calculateEndDate(string $incrementer, ?DateTime $start = null): DateTime
 {
 	global $settings;
 
